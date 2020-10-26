@@ -14,6 +14,10 @@ import {HomeComponent} from './home/home.component';
 import {HospitaliseService} from './services/hospitalise.service';
 import {MenubarModule} from 'primeng/menubar';
 import {MenuModule} from 'primeng/menu';
+import {DropdownModule} from 'primeng/dropdown';
+import {FormsModule} from '@angular/forms';
+import {CalendarModule} from 'primeng/calendar';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 
 // the second parameter 'fr' is optional
 registerLocaleData(localeFr, 'fr');
@@ -31,11 +35,15 @@ const appRoutes: Routes = [
   imports: [
     RouterModule.forRoot(appRoutes, {enableTracing: false}),
     BrowserModule,
+    BrowserAnimationsModule,
+    FormsModule,
     HttpClientModule,
     ChartModule,
     CardModule,
     TabMenuModule,
     MenuModule,
+    CalendarModule,
+    DropdownModule,
     MenubarModule,
     AppRoutingModule
   ],

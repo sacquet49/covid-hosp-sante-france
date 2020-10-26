@@ -1,6 +1,11 @@
 <div class="p-col-10 p-offset-1">
-    <h1 class="ass-label-gray card">Graphique des patients covid à l'hôpital en France</h1>
+  <h1 class="ass-label-gray card">Graphique des patients covid à l'hôpital en France</h1>
 
-    <p-chart type="bar" [data]="data"></p-chart>
+  <p-calendar [(ngModel)]="jour" [minDate]="minDate" [maxDate]="maxDate"
+              [readonlyInput]="true" inputId="min-max"
+              dateFormat="dd/mm/yy"
+              (onSelect)="updateChart()"></p-calendar>
+
+  <p-chart #chart type="bar" [data]="data"></p-chart>
 
 </div>
