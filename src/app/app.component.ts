@@ -1,10 +1,21 @@
-import { Component } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
+import {MenuItem} from 'primeng/api';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
-export class AppComponent {
-  title = 'covid-hosp-sante-france';
+export class AppComponent implements OnInit {
+
+  tabMenuItems = [
+    {label: '', icon: 'pi pi-home', routerLink: ['home']},
+  ];
+
+  constructor() {
+
+  }
+
+  ngOnInit(): void {
+  }
 }

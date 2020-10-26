@@ -1,0 +1,17 @@
+// Bootstrap 4 Required
+@import "../../node_modules/bootstrap/scss/functions";
+@import "../../node_modules/bootstrap/scss/variables";
+@import "../../node_modules/bootstrap/scss/mixins";
+// Bootstrap 4 Optional
+@import "../../node_modules/bootstrap/scss/utilities";
+
+p-autocomplete {
+  input {
+    width: 100%;
+  }
+}
+
+.p-panel .p-panel-header {
+  background: #007bff !important;
+  color: #fff !important;
+}

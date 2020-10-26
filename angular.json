@@ -36,6 +36,7 @@
               "node_modules/@fullcalendar/timegrid/main.min.css",
               "src/assets/theme/theme-blue.css",
               "src/assets/layout/css/layout-blue.css",
+              "src/assets/index.scss",
               "src/styles.scss"
             ],
             "scripts": ["node_modules/chart.js/dist/Chart.js"]
