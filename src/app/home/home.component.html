@@ -1,11 +1,24 @@
 <div class="p-col-10 p-offset-1">
   <h1 class="ass-label-gray card">Graphique des patients covid à l'hôpital en France</h1>
 
-  <p-calendar [(ngModel)]="jour" [minDate]="minDate" [maxDate]="maxDate"
-              [readonlyInput]="true" inputId="min-max"
-              dateFormat="dd/mm/yy"
-              (onSelect)="updateChart()"></p-calendar>
+  <div class="p-fluid p-grid p-formgrid p-mb-2">
+    <div class="p-field p-col-12 p-md-3">
+      <p-calendar [(ngModel)]="jour" [minDate]="minDate" [maxDate]="maxDate"
+                  [readonlyInput]="true" inputId="min-max"
+                  dateFormat="dd/mm/yy" [locale]="fr"
+                  placeholder="Choix d'une date"
+                  (onSelect)="updateChart()"></p-calendar>
+    </div>
+    <div class="p-field p-col-12 p-md-3">
+      <p-calendar *ngIf="jour" [(ngModel)]="jour2"
+                  [minDate]="minDate" [maxDate]="maxDate"
+                  [readonlyInput]="true" inputId="min-max"
+                  dateFormat="dd/mm/yy" [locale]="fr"
+                  placeholder="Choix d'une date pour comparaison"
+                  (onSelect)="updateChart()"></p-calendar>
+    </div>
+  </div>
 
-  <p-chart #chart type="bar" [data]="data"></p-chart>
+  <p-chart #chart type="bar" [data]="data" width="1250" height="570"></p-chart>
 
 </div>
