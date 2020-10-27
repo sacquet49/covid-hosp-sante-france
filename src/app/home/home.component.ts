@@ -78,7 +78,7 @@ export class HomeComponent implements OnInit {
       data: this.gethospitaliseByFilterAndDate('hosp', date)
     });
     this.data.datasets.push({
-      label: `Patients covid hospitalisés au ${dateFr}`,
+      label: `Patients covid hospitalisés en réanimation au ${dateFr}`,
       backgroundColor: '#b80000',
       borderColor: '#ea0000',
       data: this.gethospitaliseByFilterAndDate('rea', date)
