@@ -1,5 +1,7 @@
 # CovidHospSanteFrance
 
+![Main page](readme_file/Annotation 2020-10-27 203145.png)
+
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 10.2.0.
 
 ## Development server
