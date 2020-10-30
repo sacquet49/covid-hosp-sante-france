@@ -18,6 +18,7 @@ import {DropdownModule} from 'primeng/dropdown';
 import {FormsModule} from '@angular/forms';
 import {CalendarModule} from 'primeng/calendar';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import {CheckboxModule} from 'primeng/checkbox';
 
 // the second parameter 'fr' is optional
 registerLocaleData(localeFr, 'fr');
@@ -45,6 +46,7 @@ const appRoutes: Routes = [
     CalendarModule,
     DropdownModule,
     MenubarModule,
+    CheckboxModule,
     AppRoutingModule
   ],
   providers: [
