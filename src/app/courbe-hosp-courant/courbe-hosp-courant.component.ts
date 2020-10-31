@@ -1,6 +1,5 @@
-import {AfterViewChecked, Component, OnInit, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, ViewChild} from '@angular/core';
 import {HospitaliseService} from '../services/hospitalise.service';
-import {Subscription} from 'rxjs';
 import {UIChart} from 'primeng/chart';
 
 @Component({
@@ -8,7 +7,7 @@ import {UIChart} from 'primeng/chart';
   templateUrl: './courbe-hosp-courant.component.html',
   providers: []
 })
-export class CourbeHospCourantComponent implements AfterViewChecked {
+export class CourbeHospCourantComponent implements AfterViewInit {
 
   ENUM_SEX = {
     TOUS: '0',
@@ -22,7 +21,6 @@ export class CourbeHospCourantComponent implements AfterViewChecked {
   chart: UIChart;
   @ViewChild('chartDece')
   chartDece: UIChart;
-  subscription: Subscription;
   hospitaliseParJour = [];
   decesParJour = [];
   data = {
@@ -35,12 +33,9 @@ export class CourbeHospCourantComponent implements AfterViewChecked {
   };
 
   constructor(private newsService: HospitaliseService) {
-    this.subscription = this.newsService.getCsv().subscribe(csv => {
-      this.init();
-    });
   }
 
-  ngAfterViewChecked(): void {
+  ngAfterViewInit(): void {
     this.init();
   }
 

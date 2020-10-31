@@ -1,6 +1,5 @@
-import {AfterViewChecked, AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
 import {HospitaliseService} from '../services/hospitalise.service';
-import {Subscription} from 'rxjs';
 import * as moment from 'moment';
 import {UIChart} from 'primeng/chart';
 import {fr} from '../services/local';
@@ -10,7 +9,7 @@ import {fr} from '../services/local';
   templateUrl: './home.component.html',
   providers: []
 })
-export class HomeComponent implements AfterViewInit {
+export class HomeComponent implements AfterViewInit, OnInit {
 
   LABEL_HOSPITALISATION = `Patients covid hospitalisés au `;
   LABEL_REANIMATION = `Patients covid hospitalisés au `;
@@ -20,7 +19,6 @@ export class HomeComponent implements AfterViewInit {
   chart: UIChart;
   @ViewChild('chartVariation')
   chartVariation: UIChart;
-  subscription: Subscription;
   hospitaliseParJour = [];
   minDate;
   maxDate;
@@ -36,19 +34,19 @@ export class HomeComponent implements AfterViewInit {
   };
   fr = fr;
 
-  ngAfterViewInit(): void {
-    this.init();
+  constructor(private newsService: HospitaliseService) {
   }
 
-  constructor(private newsService: HospitaliseService) {
+  ngOnInit(): void {
     this.minDate = new Date();
     this.minDate.setDate(18);
     this.minDate.setMonth(2);
     this.minDate.setFullYear(2020);
-    this.maxDate = new Date();
-    this.subscription = this.newsService.getCsv().subscribe(csv => {
-      this.init();
-    });
+    setTimeout( () => this.init(), 50);
+  }
+
+  ngAfterViewInit(): void {
+    setTimeout( () => this.refreshChart(), 50);
   }
 
   init(): void {
@@ -56,7 +54,7 @@ export class HomeComponent implements AfterViewInit {
       this.hospitaliseParJour = this.newsService.csv[2].data.reduce((r, v, i, a, k = v.jour) => ((r[k] || (r[k] = [])).push(v), r), {});
       const maxDatePossible = Object.entries(this.hospitaliseParJour)[Object.entries(this.hospitaliseParJour).length - 2][0];
       this.maxDate = moment(maxDatePossible, 'YYYY-MM-DD').toDate();
-      this.refreshChart();
+      this.jour = this.jour ? this.jour : this.maxDate;
     }
   }
 
@@ -67,14 +65,13 @@ export class HomeComponent implements AfterViewInit {
         this.chart.refresh();
       }
       this.data.datasets = [];
-      const jour = this.jour ? this.jour : this.maxDate;
 
-      this.updateChart(jour, '#42A5F5', this.LABEL_HOSPITALISATION, 'hosp');
+      this.updateChart(this.jour, '#42A5F5', this.LABEL_HOSPITALISATION, 'hosp');
       if (this.jour2) {
         this.updateChart(this.jour2, '#9CCC65', this.LABEL_HOSPITALISATION, 'hosp');
       }
 
-      this.updateChart(jour, '#eccd05', this.LABEL_REANIMATION, 'rea');
+      this.updateChart(this.jour, '#eccd05', this.LABEL_REANIMATION, 'rea');
       if (this.jour2) {
         this.updateChart(this.jour2, '#b80000', this.LABEL_REANIMATION, 'rea');
       }
