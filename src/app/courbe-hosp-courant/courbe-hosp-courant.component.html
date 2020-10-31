@@ -17,13 +17,30 @@
                      inputId="sexe3" (ngModelChange)="refresh()"></p-radioButton>
       <label for="sexe3">Femme</label>
     </div>
+    <div class="p-field p-col-12 p-md-3">
+      <p-dropdown [options]="departementsDrop" [(ngModel)]="departementSelected"
+                  [style]="{'width':'100%'}" filter="true" (onChange)="refresh()"
+                  [showClear]="true" placeholder="Département">
+        <ng-template let-item pTemplate="selectedItem">
+          <span>{{item.label}}</span>
+        </ng-template>
+        <ng-template let-dep pTemplate="item">
+          <div class="ui-helper-clearfix">
+            {{dep.label}}
+          </div>
+        </ng-template>
+      </p-dropdown>
+    </div>
   </div>
 
   <div class="p-grid p-mt-4 mb-5">
     <p-chart #chart type="line" [data]="data" height="570" class="w-100"></p-chart>
   </div>
-  <div class="p-grid">
+  <div class="p-grid p-mt-4 mb-5">
     <p-chart #chartDece type="line" [data]="dataDece" height="570" class="w-100"></p-chart>
+  </div>
+  <div class="p-grid">
+    <p-chart #chartHospAndDece type="line" [data]="dataHospAndDece" height="570" class="w-100"></p-chart>
   </div>
 
 </div>

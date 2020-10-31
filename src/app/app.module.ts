@@ -21,6 +21,7 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {CheckboxModule} from 'primeng/checkbox';
 import {CourbeHospCourantComponent} from './courbe-hosp-courant/courbe-hosp-courant.component';
 import {RadioButtonModule} from 'primeng/radiobutton';
+import {AdresseService} from './services/adresse.service';
 
 // the second parameter 'fr' is optional
 registerLocaleData(localeFr, 'fr');
@@ -56,7 +57,8 @@ const appRoutes: Routes = [
   ],
   providers: [
     {provide: LOCALE_ID, useValue: 'fr'},
-    HospitaliseService
+    HospitaliseService,
+    AdresseService
     ],
   bootstrap: [
     AppComponent

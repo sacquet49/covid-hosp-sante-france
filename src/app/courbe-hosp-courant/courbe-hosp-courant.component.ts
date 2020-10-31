@@ -1,6 +1,8 @@
 import {AfterViewInit, Component, ViewChild} from '@angular/core';
 import {HospitaliseService} from '../services/hospitalise.service';
 import {UIChart} from 'primeng/chart';
+import {AdresseService} from '../services/adresse.service';
+import {SelectItem} from 'primeng/api';
 
 @Component({
   selector: 'courbe-hosp-courant',
@@ -15,12 +17,17 @@ export class CourbeHospCourantComponent implements AfterViewInit {
     FEMME: '2'
   };
   sexSelected = this.ENUM_SEX.TOUS;
+  departements: any = [];
+  departementSelected: string;
+  departementsDrop: SelectItem[];
   LABEL_HOSPITALISATION = `Patients covid hospitaliser`;
   LABEL_REANIMATION = `Patients covid en réanimation`;
   @ViewChild('chart')
   chart: UIChart;
   @ViewChild('chartDece')
   chartDece: UIChart;
+  @ViewChild('chartHospAndDece')
+  chartHospAndDece: UIChart;
   hospitaliseParJour = [];
   decesParJour = [];
   data = {
@@ -31,8 +38,16 @@ export class CourbeHospCourantComponent implements AfterViewInit {
     labels: [],
     datasets: []
   };
+  dataHospAndDece = {
+    labels: [],
+    datasets: []
+  };
 
-  constructor(private newsService: HospitaliseService) {
+  constructor(private newsService: HospitaliseService, private adresseService: AdresseService) {
+    this.adresseService.getAllDepartement().subscribe(rep => {
+      this.departements = rep;
+      this.departementsDrop = this.departements.map(dep => ({label: dep.nom, value: dep.code}));
+    });
   }
 
   ngAfterViewInit(): void {
@@ -50,6 +65,9 @@ export class CourbeHospCourantComponent implements AfterViewInit {
       this.decesParJour = this.newsService.csv[1].data.reduce((r, v, i, a, k = v.jour) => ((r[k] || (r[k] = [])).push(v), r), {});
       this.dataDece.labels = Object.entries(this.hospitaliseParJour).map(hospJour => hospJour['0']);
       this.updateChartDece();
+
+      this.dataHospAndDece.labels = Object.entries(this.hospitaliseParJour).map(hospJour => hospJour['0']);
+      this.updateChartHospAndDece();
     }
   }
 
@@ -72,9 +90,16 @@ export class CourbeHospCourantComponent implements AfterViewInit {
   }
 
   gethospitaliseByFilter(filtre: string, sex: string): any[] {
-    return Object.entries(this.hospitaliseParJour).map(hospJour => hospJour['1']
-      .reduce((r, v, i, a, k = v.sexe) => ((r[k] || (r[k] = [])).push(v[filtre]) , r), {})[sex])
-      .map(ha => this.reduceAdd(ha));
+    if (this.departementSelected) {
+      return Object.entries(this.hospitaliseParJour).map(hospJour => hospJour['1']
+        .filter((ha: any) => ha.dep === this.departementSelected)
+        .reduce((r, v, i, a, k = v.sexe) => ((r[k] || (r[k] = [])).push(v[filtre]) , r), {})[sex])
+        .map(ha => this.reduceAdd(ha));
+    } else {
+      return Object.entries(this.hospitaliseParJour).map(hospJour => hospJour['1']
+        .reduce((r, v, i, a, k = v.sexe) => ((r[k] || (r[k] = [])).push(v[filtre]) , r), {})[sex])
+        .map(ha => this.reduceAdd(ha));
+    }
   }
 
   reduceAdd(array: Array<any>): any {
@@ -99,5 +124,25 @@ export class CourbeHospCourantComponent implements AfterViewInit {
     return Object.entries(this.decesParJour).map(hospJour => hospJour['1']
       .reduce((r, v, i, a, k = v.jour) => ((r[k] || (r[k] = [])).push(v.incid_dc) , r), {}))
       .map(j => this.reduceAdd(Object.values(j)['0']));
+  }
+
+  updateChartHospAndDece(): void {
+    const dataDece = this.getDecesByDay();
+    this.dataHospAndDece.datasets.push({
+      label: `Nombre quotidien de personnes nouvellement décédées`,
+      fill: false,
+      borderColor: '#990303',
+      data: dataDece
+    });
+    this.chartHospAndDece.refresh();
+
+    const data = this.gethospitaliseByFilter('hosp', this.ENUM_SEX.TOUS);
+    this.dataHospAndDece.datasets.push({
+      label: `Nombre de personnes actuellement hospitalisées`,
+      fill: false,
+      borderColor: '#022179',
+      data
+    });
+    this.chartHospAndDece.refresh();
   }
 }

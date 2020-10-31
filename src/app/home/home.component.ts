@@ -12,7 +12,7 @@ import {fr} from '../services/local';
 export class HomeComponent implements AfterViewInit, OnInit {
 
   LABEL_HOSPITALISATION = `Patients covid hospitalisés au `;
-  LABEL_REANIMATION = `Patients covid hospitalisés au `;
+  LABEL_REANIMATION = `Patients covid hospitalisés en réanimation au `;
   proportion = false;
   variation = false;
   @ViewChild('chart')
@@ -42,11 +42,11 @@ export class HomeComponent implements AfterViewInit, OnInit {
     this.minDate.setDate(18);
     this.minDate.setMonth(2);
     this.minDate.setFullYear(2020);
-    setTimeout( () => this.init(), 50);
+    setTimeout(() => this.init(), 50);
   }
 
   ngAfterViewInit(): void {
-    setTimeout( () => this.refreshChart(), 50);
+    setTimeout(() => this.refreshChart(), 50);
   }
 
   init(): void {
@@ -66,14 +66,17 @@ export class HomeComponent implements AfterViewInit, OnInit {
       }
       this.data.datasets = [];
 
-      this.updateChart(this.jour, '#42A5F5', this.LABEL_HOSPITALISATION, 'hosp');
+      const jourMin = this.jour && !this.jour2 ? this.jour : (this.jour < this.jour2 ? this.jour : this.jour2);
+      const jourMax = this.jour && this.jour2 && this.jour > this.jour2 ? this.jour : this.jour2;
+
+      this.updateChart(jourMin, '#42A5F5', this.LABEL_HOSPITALISATION, 'hosp');
       if (this.jour2) {
-        this.updateChart(this.jour2, '#9CCC65', this.LABEL_HOSPITALISATION, 'hosp');
+        this.updateChart(jourMax, '#9CCC65', this.LABEL_HOSPITALISATION, 'hosp');
       }
 
-      this.updateChart(this.jour, '#eccd05', this.LABEL_REANIMATION, 'rea');
+      this.updateChart(jourMin, '#eccd05', this.LABEL_REANIMATION, 'rea');
       if (this.jour2) {
-        this.updateChart(this.jour2, '#b80000', this.LABEL_REANIMATION, 'rea');
+        this.updateChart(jourMax, '#b80000', this.LABEL_REANIMATION, 'rea');
       }
     }
   }
@@ -105,10 +108,12 @@ export class HomeComponent implements AfterViewInit, OnInit {
       }
       this.variationData.datasets = [];
 
-      const dateString = moment(this.jour).format('YYYY-MM-DD');
-      const dateString2 = moment(this.jour2).format('YYYY-MM-DD');
-      const dateFr = moment(this.jour).format('DD-MM-YYYY');
-      const dateFr2 = moment(this.jour2).format('DD-MM-YYYY');
+      const jourMin = this.jour && !this.jour2 ? this.jour : (this.jour < this.jour2 ? this.jour : this.jour2);
+      const jourMax = this.jour && this.jour2 && this.jour > this.jour2 ? this.jour : this.jour2;
+      const dateString = moment(jourMin).format('YYYY-MM-DD');
+      const dateString2 = moment(jourMax).format('YYYY-MM-DD');
+      const dateFr = moment(jourMin).format('DD-MM-YYYY');
+      const dateFr2 = moment(jourMax).format('DD-MM-YYYY');
 
       this.variationData.datasets.push({
         label: `Variation des entrées à l'hopital entre le ${dateFr} et ${dateFr2}`,
