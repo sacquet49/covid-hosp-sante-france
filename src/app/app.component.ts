@@ -1,5 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {MenuItem} from 'primeng/api';
+import {Location} from '@angular/common';
 
 @Component({
   selector: 'app-root',
@@ -8,14 +9,17 @@ import {MenuItem} from 'primeng/api';
 })
 export class AppComponent implements OnInit {
 
-  tabMenuItems = [
+  tabMenuItems: MenuItem[] = [
     {label: '', icon: 'pi pi-home', routerLink: ['home']},
+    {label: 'Courbe hospitaliser courant', icon: 'pi pi-chart-line', routerLink: ['courant']},
   ];
+  currantItem;
 
-  constructor() {
-
+  constructor(private location: Location) {
   }
 
   ngOnInit(): void {
+    this.currantItem = this.tabMenuItems
+      .find(mi => mi.routerLink['0'] === this.location.path().replace('/', ''));
   }
 }

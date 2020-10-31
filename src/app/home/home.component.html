@@ -3,7 +3,7 @@
 
   <div class="p-fluid p-grid p-formgrid p-mb-2">
     <div class="p-field p-col-12 p-md-3">
-      <p-calendar [(ngModel)]="jour" [minDate]="minDate" [maxDate]="maxDate"
+      <p-calendar [(ngModel)]="jour ? jour : maxDate" [minDate]="minDate" [maxDate]="maxDate"
                   [readonlyInput]="true" inputId="min-max"
                   dateFormat="dd/mm/yy" [locale]="fr"
                   placeholder="Choix d'une date"

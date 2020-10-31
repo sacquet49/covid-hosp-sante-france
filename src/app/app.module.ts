@@ -19,6 +19,8 @@ import {FormsModule} from '@angular/forms';
 import {CalendarModule} from 'primeng/calendar';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {CheckboxModule} from 'primeng/checkbox';
+import {CourbeHospCourantComponent} from './courbe-hosp-courant/courbe-hosp-courant.component';
+import {RadioButtonModule} from 'primeng/radiobutton';
 
 // the second parameter 'fr' is optional
 registerLocaleData(localeFr, 'fr');
@@ -26,12 +28,14 @@ registerLocaleData(localeFr, 'fr');
 const appRoutes: Routes = [
   {path: '', redirectTo: 'home', pathMatch: 'full'},
   {path: 'home', component: HomeComponent},
+  {path: 'courant', component: CourbeHospCourantComponent},
 ];
 
 @NgModule({
   declarations: [
     AppComponent,
-    HomeComponent
+    HomeComponent,
+    CourbeHospCourantComponent
   ],
   imports: [
     RouterModule.forRoot(appRoutes, {enableTracing: false}),
@@ -47,6 +51,7 @@ const appRoutes: Routes = [
     DropdownModule,
     MenubarModule,
     CheckboxModule,
+    RadioButtonModule,
     AppRoutingModule
   ],
   providers: [

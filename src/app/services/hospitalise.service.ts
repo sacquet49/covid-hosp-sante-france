@@ -9,10 +9,10 @@ export class HospitaliseService {
   private subjectCsvHospitalisation = new Subject<any>();
 
   csv = [
-    {nom: 'donnees-hospitalieres-covid19', id: '', data: ''},
-    {nom: 'donnees-hospitalieres-nouveaux-covid19', id: '', data: ''},
-    {nom: 'donnees-hospitalieres-classe-age-covid19', id: '', data: ''},
-    {nom: 'donnees-hospitalieres-etablissements-covid19', id: '', data: ''}
+    {nom: 'donnees-hospitalieres-covid19', id: '', data: []},
+    {nom: 'donnees-hospitalieres-nouveaux-covid19', id: '', data: []},
+    {nom: 'donnees-hospitalieres-classe-age-covid19', id: '', data: []},
+    {nom: 'donnees-hospitalieres-etablissements-covid19', id: '', data: []}
   ];
 
   @Output()

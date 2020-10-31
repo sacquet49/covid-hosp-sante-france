@@ -1,0 +1,29 @@
+<div class="p-col-10 p-offset-1">
+  <h1 class="ass-label-gray card">Courbe suivie des patients covid à l'hôpital en France par jour.</h1>
+
+  <div class="p-field-radiobutton p-grid p-formgrid p-mb-2">
+    <div class="p-field-radiobutton p-col-12 p-md-3">
+      <p-radioButton name="sexe" [value]="ENUM_SEX.TOUS" [(ngModel)]="sexSelected"
+                     inputId="sexe1" (ngModelChange)="refresh()"></p-radioButton>
+      <label for="sexe1">Homme et Femme</label>
+    </div>
+    <div class="p-field-radiobutton p-col-12 p-md-3">
+      <p-radioButton name="sexe" [value]="ENUM_SEX.HOMME" [(ngModel)]="sexSelected"
+                     inputId="sexe2" (ngModelChange)="refresh()"></p-radioButton>
+      <label for="sexe2">Homme</label>
+    </div>
+    <div class="p-field-radiobutton p-col-12 p-md-3">
+      <p-radioButton name="sexe" [value]="ENUM_SEX.FEMME" [(ngModel)]="sexSelected"
+                     inputId="sexe3" (ngModelChange)="refresh()"></p-radioButton>
+      <label for="sexe3">Femme</label>
+    </div>
+  </div>
+
+  <div class="p-grid p-mt-4 mb-5">
+    <p-chart #chart type="line" [data]="data" height="570" class="w-100"></p-chart>
+  </div>
+  <div class="p-grid">
+    <p-chart #chartDece type="line" [data]="dataDece" height="570" class="w-100"></p-chart>
+  </div>
+
+</div>
