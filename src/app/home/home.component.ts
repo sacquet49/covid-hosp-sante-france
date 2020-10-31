@@ -13,18 +13,26 @@ export class HomeComponent implements AfterViewInit, OnInit {
 
   LABEL_HOSPITALISATION = `Patients covid hospitalisés au `;
   LABEL_REANIMATION = `Patients covid hospitalisés en réanimation au `;
+  LABEL_DECEDE = `Nombre cumulé de personnes décédées au `;
   proportion = false;
+  proportionDece = false;
   variation = false;
   @ViewChild('chart')
   chart: UIChart;
   @ViewChild('chartVariation')
   chartVariation: UIChart;
+  @ViewChild('chartDece')
+  chartDece: UIChart;
   hospitaliseParJour = [];
   minDate;
   maxDate;
   jour;
   jour2;
   data = {
+    labels: ['0- 9', '10 - 19', '20 - 29', '30 - 39', '40 - 49', '50 - 59', '60 - 69', '70 - 79', '80 - 89', '>90'],
+    datasets: []
+  };
+  dataDece = {
     labels: ['0- 9', '10 - 19', '20 - 29', '30 - 39', '40 - 49', '50 - 59', '60 - 69', '70 - 79', '80 - 89', '>90'],
     datasets: []
   };
@@ -47,6 +55,7 @@ export class HomeComponent implements AfterViewInit, OnInit {
 
   ngAfterViewInit(): void {
     setTimeout(() => this.refreshChart(), 50);
+    setTimeout(() => this.updateChartDece(), 50);
   }
 
   init(): void {
@@ -97,6 +106,30 @@ export class HomeComponent implements AfterViewInit, OnInit {
     });
     if (this.chart) {
       this.chart.refresh();
+    }
+  }
+
+  updateChartDece(): void {
+    if (this.chartDece) {
+      this.chartDece.reinit();
+      this.chartDece.refresh();
+    }
+    this.dataDece.datasets = [];
+    const dateString = moment(this.maxDate).format('YYYY-MM-DD');
+    const dateFr = moment(this.maxDate).format('DD-MM-YYYY');
+    let data = this.gethospitaliseByFilterAndDate('dc', dateString);
+    if (this.proportionDece) {
+      const total = this.reduceAdd(data);
+      data = data.map(d => this.roundDecimal((d * 100) / total, 2));
+    }
+    this.dataDece.datasets.push({
+      label: `${this.LABEL_DECEDE} ${dateFr}`,
+      backgroundColor: '#048d92',
+      borderColor: '#048d92',
+      data
+    });
+    if (this.chartDece) {
+      this.chartDece.refresh();
     }
   }
 
