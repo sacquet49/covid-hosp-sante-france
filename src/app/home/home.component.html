@@ -3,19 +3,19 @@
 
   <div class="p-fluid p-grid p-formgrid p-mb-2">
     <div class="p-field p-col-12 p-md-3">
-      <p-calendar [(ngModel)]="jour ? jour : maxDate" [minDate]="minDate" [maxDate]="maxDate"
+      <p-calendar [(ngModel)]="jour" [minDate]="minDate" [maxDate]="maxDate"
                   [readonlyInput]="true" inputId="min-max"
                   dateFormat="dd/mm/yy" [locale]="fr"
-                  placeholder="Choix d'une date"
-                  (onSelect)="refreshChart();refreshVariation()"></p-calendar>
+                  placeholder="Choix d'une date" showButtonBar="true"
+                  (onClose)="refreshChart();refreshVariation()"></p-calendar>
     </div>
     <div class="p-field p-col-12 p-md-3" *ngIf="jour">
-      <p-calendar [(ngModel)]="jour2"
+      <p-calendar [(ngModel)]="jour2" showButtonBar="true"
                   [minDate]="minDate" [maxDate]="maxDate"
                   [readonlyInput]="true" inputId="min-max"
                   dateFormat="dd/mm/yy" [locale]="fr"
                   placeholder="Choix d'une date pour comparaison"
-                  (onSelect)="refreshChart();refreshVariation()"></p-calendar>
+                  (onClose)="refreshChart();refreshVariation()"></p-calendar>
     </div>
     <div class="p-field-checkbox p-col-12 p-md-3">
       <p-checkbox [(ngModel)]="proportion" (onChange)="refreshChart()"
@@ -24,8 +24,8 @@
     </div>
     <div class="p-field-checkbox p-col-12 p-md-3" *ngIf="jour && jour2">
       <p-checkbox [(ngModel)]="variation" (onChange)="refreshVariation()"
-                  binary="true" inputId="binary"></p-checkbox>
-      <label for="binary">Variation %</label>
+                  binary="true" inputId="binary2"></p-checkbox>
+      <label for="binary2">Variation %</label>
     </div>
   </div>
 

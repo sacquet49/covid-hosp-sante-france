@@ -1,4 +1,4 @@
-import {AfterContentInit, AfterViewChecked, AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
+import {AfterViewChecked, AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
 import {HospitaliseService} from '../services/hospitalise.service';
 import {Subscription} from 'rxjs';
 import * as moment from 'moment';
@@ -10,7 +10,7 @@ import {fr} from '../services/local';
   templateUrl: './home.component.html',
   providers: []
 })
-export class HomeComponent implements AfterViewChecked {
+export class HomeComponent implements AfterViewInit {
 
   LABEL_HOSPITALISATION = `Patients covid hospitalisés au `;
   LABEL_REANIMATION = `Patients covid hospitalisés au `;
@@ -36,7 +36,7 @@ export class HomeComponent implements AfterViewChecked {
   };
   fr = fr;
 
-  ngAfterViewChecked(): void {
+  ngAfterViewInit(): void {
     this.init();
   }
 
@@ -61,19 +61,23 @@ export class HomeComponent implements AfterViewChecked {
   }
 
   refreshChart(): void {
-    this.chart.reinit();
-    this.chart.refresh();
-    this.data.datasets = [];
-    const jour = this.jour ? this.jour : this.maxDate;
+    if (this.hospitaliseParJour instanceof Object) {
+      if (this.chart) {
+        this.chart.reinit();
+        this.chart.refresh();
+      }
+      this.data.datasets = [];
+      const jour = this.jour ? this.jour : this.maxDate;
 
-    this.updateChart(jour, '#42A5F5', this.LABEL_HOSPITALISATION, 'hosp');
-    if (this.jour2) {
-      this.updateChart(this.jour2, '#9CCC65', this.LABEL_HOSPITALISATION, 'hosp');
-    }
+      this.updateChart(jour, '#42A5F5', this.LABEL_HOSPITALISATION, 'hosp');
+      if (this.jour2) {
+        this.updateChart(this.jour2, '#9CCC65', this.LABEL_HOSPITALISATION, 'hosp');
+      }
 
-    this.updateChart(jour, '#eccd05', this.LABEL_REANIMATION, 'rea');
-    if (this.jour2) {
-      this.updateChart(this.jour2, '#b80000', this.LABEL_REANIMATION, 'rea');
+      this.updateChart(jour, '#eccd05', this.LABEL_REANIMATION, 'rea');
+      if (this.jour2) {
+        this.updateChart(this.jour2, '#b80000', this.LABEL_REANIMATION, 'rea');
+      }
     }
   }
 
@@ -83,7 +87,7 @@ export class HomeComponent implements AfterViewChecked {
     let data = this.gethospitaliseByFilterAndDate(filtre, dateString);
     if (this.proportion) {
       const total = this.reduceAdd(data);
-      data = data.map(d => (d * 100) / total);
+      data = data.map(d => this.roundDecimal((d * 100) / total, 2));
     }
     this.data.datasets.push({
       label: `${label} ${dateFr}`,
@@ -91,7 +95,9 @@ export class HomeComponent implements AfterViewChecked {
       borderColor: couleur,
       data
     });
-    this.chart.refresh();
+    if (this.chart) {
+      this.chart.refresh();
+    }
   }
 
   refreshVariation(): void {
@@ -120,20 +126,25 @@ export class HomeComponent implements AfterViewChecked {
         borderColor: '#ff0000',
         data: this.getVariation('rea', dateString, dateString2)
       });
+      if (this.chartVariation) {
+        this.chartVariation.refresh();
+      }
     }
   }
 
   getVariation(filtre: string, dateMin: any, dateMax: any): any {
     const dataRea = this.gethospitaliseByFilterAndDate(filtre, dateMin);
     const dataRea2 = this.gethospitaliseByFilterAndDate(filtre, dateMax);
-    return dataRea.map((v, i) => (100 * (dataRea2[i] - v)) / v);
+    return dataRea.map((v, i) => this.roundDecimal((100 * (dataRea2[i] - v)) / v, 2));
   }
 
   gethospitaliseByFilterAndDate(filtre: string, date: string): any[] {
     const hospitalise = [];
-    Object.entries(this.hospitaliseParJour[date]
-      .reduce((r, v, i, a, k = v.cl_age90) => ((r[k] || (r[k] = [])).push(v[filtre]) , r), {}))
-      .map((ha: any) => hospitalise.push(this.reduceAdd(ha['1'])));
+    if (this.hospitaliseParJour[date]) {
+      Object.entries(this.hospitaliseParJour[date]
+        .reduce((r, v, i, a, k = v.cl_age90) => ((r[k] || (r[k] = [])).push(v[filtre]) , r), {}))
+        .map((ha: any) => hospitalise.push(this.reduceAdd(ha['1'])));
+    }
     return hospitalise.slice(1);
   }
 
@@ -141,5 +152,11 @@ export class HomeComponent implements AfterViewChecked {
     // tslint:disable-next-line:radix
     const reducer = (accumulator, currentValue) => parseInt(accumulator) + parseInt(currentValue);
     return array.reduce(reducer);
+  }
+
+  roundDecimal(nombre, precision): any {
+    precision = precision || 2;
+    const tmp = Math.pow(10, precision);
+    return Math.round(nombre * tmp) / tmp;
   }
 }
