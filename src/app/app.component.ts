@@ -27,7 +27,7 @@ export class AppComponent implements OnInit {
   ngOnInit(): void {
     this.currantItem = this.location.path().replace('/', '') !== '' ?
       this.tabMenuItems
-        .find(mi => mi.routerLink['0'] === this.location.path().replace('/', '')) :
+        .find(mi => this.location.path().replace('/', '').includes(mi.routerLink['0'])) :
       this.tabMenuItems[0];
   }
 }

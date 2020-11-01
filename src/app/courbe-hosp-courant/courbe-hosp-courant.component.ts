@@ -51,7 +51,7 @@ export class CourbeHospCourantComponent implements AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    this.init();
+    setTimeout(() => this.init(), 50);
   }
 
   init(): void {
