@@ -168,5 +168,14 @@ export class CourbeHospCourantComponent implements AfterViewInit {
       data: dataStd
     });
     this.chartHospEcartType.refresh();
+
+    const dataDece = this.getDecesByDay();
+    this.dataHospEcartType.datasets.push({
+      label: `Nombre quotidien de personnes nouvellement décédées`,
+      fill: false,
+      borderColor: '#990303',
+      data: dataDece
+    });
+    this.chartHospEcartType.refresh();
   }
 }
