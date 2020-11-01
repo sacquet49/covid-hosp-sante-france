@@ -77,7 +77,7 @@ export class CourbeHospCourantComponent implements AfterViewInit {
       this.updateChartHospAndDece();
 
       this.dataHospEcartType.labels = Object.entries(this.hospitaliseParJour).map(hospJour => hospJour['0']);
-      this.updateChartHospVariance();
+      this.updateChartHospEcartType();
     }
   }
 
@@ -156,7 +156,7 @@ export class CourbeHospCourantComponent implements AfterViewInit {
     this.chartHospAndDece.refresh();
   }
 
-  updateChartHospVariance(): void {
+  updateChartHospEcartType(): void {
     const data = this.gethospitaliseByFilter('hosp', this.ENUM_SEX.TOUS);
 
     let dataStd = data.map((v, i) => data[i + 1] && v ? math.std(v, data[i + 1]) : undefined);
