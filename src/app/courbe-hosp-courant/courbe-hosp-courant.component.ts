@@ -3,6 +3,7 @@ import {HospitaliseService} from '../services/hospitalise.service';
 import {UIChart} from 'primeng/chart';
 import {AdresseService} from '../services/adresse.service';
 import {SelectItem} from 'primeng/api';
+import * as math from 'mathjs';
 
 @Component({
   selector: 'courbe-hosp-courant',
@@ -28,6 +29,8 @@ export class CourbeHospCourantComponent implements AfterViewInit {
   chartDece: UIChart;
   @ViewChild('chartHospAndDece')
   chartHospAndDece: UIChart;
+  @ViewChild('chartHospEcartType')
+  chartHospEcartType: UIChart;
   hospitaliseParJour = [];
   decesParJour = [];
   data = {
@@ -39,6 +42,10 @@ export class CourbeHospCourantComponent implements AfterViewInit {
     datasets: []
   };
   dataHospAndDece = {
+    labels: [],
+    datasets: []
+  };
+  dataHospEcartType = {
     labels: [],
     datasets: []
   };
@@ -68,6 +75,9 @@ export class CourbeHospCourantComponent implements AfterViewInit {
 
       this.dataHospAndDece.labels = Object.entries(this.hospitaliseParJour).map(hospJour => hospJour['0']);
       this.updateChartHospAndDece();
+
+      this.dataHospEcartType.labels = Object.entries(this.hospitaliseParJour).map(hospJour => hospJour['0']);
+      this.updateChartHospVariance();
     }
   }
 
@@ -144,5 +154,19 @@ export class CourbeHospCourantComponent implements AfterViewInit {
       data
     });
     this.chartHospAndDece.refresh();
+  }
+
+  updateChartHospVariance(): void {
+    const data = this.gethospitaliseByFilter('hosp', this.ENUM_SEX.TOUS);
+
+    let dataStd = data.map((v, i) => data[i + 1] && v ? math.std(v, data[i + 1]) : undefined);
+    dataStd = dataStd.map((v, i) => dataStd[i + 1] && v ? (v + dataStd[i + 1]) / 2 : undefined);
+    this.dataHospEcartType.datasets.push({
+      label: `Ecart type du nombre de personnes actuellement hospitalisées`,
+      fill: false,
+      borderColor: '#022179',
+      data: dataStd
+    });
+    this.chartHospEcartType.refresh();
   }
 }
