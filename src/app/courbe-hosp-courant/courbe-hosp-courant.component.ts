@@ -114,7 +114,7 @@ export class CourbeHospCourantComponent implements AfterViewInit {
 
   reduceAdd(array: Array<any>): any {
     // tslint:disable-next-line:radix
-    const reducer = (accumulator, currentValue) => parseInt(accumulator) + parseInt(currentValue);
+    const reducer = (accumulator, currentValue) => parseInt(accumulator) + (currentValue ? parseInt(currentValue) : 0);
     return array ? array.reduce(reducer) : undefined;
   }
 
@@ -161,8 +161,9 @@ export class CourbeHospCourantComponent implements AfterViewInit {
 
     let dataStd = data.map((v, i) => data[i + 1] && v ? math.std(v, data[i + 1]) : undefined);
     dataStd = dataStd.map((v, i) => dataStd[i + 1] && v ? (v + dataStd[i + 1]) / 2 : undefined);
+    const total = this.reduceAdd(dataStd);
     this.dataHospEcartType.datasets.push({
-      label: `Ecart type du nombre de personnes actuellement hospitalisées`,
+      label: `Ecart type du nombre de personnes actuellement hospitalisées, total : ${total}`,
       fill: false,
       borderColor: '#022179',
       data: dataStd
