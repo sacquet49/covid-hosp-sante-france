@@ -53,7 +53,7 @@ export class HospitaliseService {
       const obj = {};
       const currentline = lines[i].split(';');
       for (let j = 0; j < headers.length; j++) {
-        obj[headers[j].replace(/"/g, '')] = currentline[j]?.replace(/"/g, '').replace(/\r/g, '');
+        obj[headers[j].replace(/"/g, '')?.trim()] = currentline[j]?.replace(/"/g, '').replace(/\r/g, '');
       }
       result.push(obj);
     }
@@ -62,5 +62,17 @@ export class HospitaliseService {
 
   getCsv(): Observable<any> {
     return this.subjectCsvHospitalisation.asObservable();
+  }
+
+  reduceAdd(array: Array<any>): any {
+    // tslint:disable-next-line:radix
+    const reducer = (accumulator, currentValue) => parseInt(accumulator) + parseInt(currentValue);
+    return array?.reduce(reducer);
+  }
+
+  roundDecimal(nombre, precision): any {
+    precision = precision || 2;
+    const tmp = Math.pow(10, precision);
+    return Math.round(nombre * tmp) / tmp;
   }
 }

@@ -42,7 +42,7 @@ export class HomeComponent implements AfterViewInit, OnInit {
   };
   fr = fr;
 
-  constructor(private newsService: HospitaliseService) {
+  constructor(private hospService: HospitaliseService) {
   }
 
   ngOnInit(): void {
@@ -59,8 +59,8 @@ export class HomeComponent implements AfterViewInit, OnInit {
   }
 
   init(): void {
-    if (this.newsService.csv[2].data.length > 0 && this.hospitaliseParJour.length === 0) {
-      this.hospitaliseParJour = this.newsService.csv[2].data.reduce((r, v, i, a, k = v.jour) => ((r[k] || (r[k] = [])).push(v), r), {});
+    if (this.hospService.csv[2].data.length > 0 && this.hospitaliseParJour.length === 0) {
+      this.hospitaliseParJour = this.hospService.csv[2].data.reduce((r, v, i, a, k = v.jour) => ((r[k] || (r[k] = [])).push(v), r), {});
       const maxDatePossible = Object.entries(this.hospitaliseParJour)[Object.entries(this.hospitaliseParJour).length - 2][0];
       this.maxDate = moment(maxDatePossible, 'YYYY-MM-DD').toDate();
       this.jour = this.jour ? this.jour : this.maxDate;
@@ -95,8 +95,8 @@ export class HomeComponent implements AfterViewInit, OnInit {
     const dateFr = moment(date).format('DD-MM-YYYY');
     let data = this.gethospitaliseByFilterAndDate(filtre, dateString);
     if (this.proportion) {
-      const total = this.reduceAdd(data);
-      data = data.map(d => this.roundDecimal((d * 100) / total, 2));
+      const total = this.hospService.reduceAdd(data);
+      data = data.map(d => this.hospService.roundDecimal((d * 100) / total, 2));
     }
     this.data.datasets.push({
       label: `${label} ${dateFr}`,
@@ -118,12 +118,12 @@ export class HomeComponent implements AfterViewInit, OnInit {
     const dateString = moment(this.maxDate).format('YYYY-MM-DD');
     const dateFr = moment(this.maxDate).format('DD-MM-YYYY');
     let data = this.gethospitaliseByFilterAndDate('dc', dateString);
+    const total = this.hospService.reduceAdd(data);
     if (this.proportionDece) {
-      const total = this.reduceAdd(data);
-      data = data.map(d => this.roundDecimal((d * 100) / total, 2));
+      data = data.map(d => this.hospService.roundDecimal((d * 100) / total, 2));
     }
     this.dataDece.datasets.push({
-      label: `${this.LABEL_DECEDE} ${dateFr}`,
+      label: `${this.LABEL_DECEDE} ${dateFr} total : ${total}`,
       backgroundColor: '#048d92',
       borderColor: '#048d92',
       data
@@ -170,7 +170,7 @@ export class HomeComponent implements AfterViewInit, OnInit {
   getVariation(filtre: string, dateMin: any, dateMax: any): any {
     const dataRea = this.gethospitaliseByFilterAndDate(filtre, dateMin);
     const dataRea2 = this.gethospitaliseByFilterAndDate(filtre, dateMax);
-    return dataRea.map((v, i) => this.roundDecimal((100 * (dataRea2[i] - v)) / v, 2));
+    return dataRea.map((v, i) => this.hospService.roundDecimal((100 * (dataRea2[i] - v)) / v, 2));
   }
 
   gethospitaliseByFilterAndDate(filtre: string, date: string): any[] {
@@ -178,20 +178,8 @@ export class HomeComponent implements AfterViewInit, OnInit {
     if (this.hospitaliseParJour[date]) {
       Object.entries(this.hospitaliseParJour[date]
         .reduce((r, v, i, a, k = v.cl_age90) => ((r[k] || (r[k] = [])).push(v[filtre]) , r), {}))
-        .map((ha: any) => hospitalise.push(this.reduceAdd(ha['1'])));
+        .map((ha: any) => hospitalise.push(this.hospService.reduceAdd(ha['1'])));
     }
     return hospitalise.slice(1);
-  }
-
-  reduceAdd(array: Array<any>): any {
-    // tslint:disable-next-line:radix
-    const reducer = (accumulator, currentValue) => parseInt(accumulator) + parseInt(currentValue);
-    return array.reduce(reducer);
-  }
-
-  roundDecimal(nombre, precision): any {
-    precision = precision || 2;
-    const tmp = Math.pow(10, precision);
-    return Math.round(nombre * tmp) / tmp;
   }
 }
