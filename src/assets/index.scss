@@ -15,3 +15,16 @@ p-autocomplete {
   background: #007bff !important;
   color: #fff !important;
 }
+
+.p-card {
+  .p-card-body {
+    padding: 0px;
+  }
+}
+
+.p-card-title {
+  min-height: 75px;
+  padding: 0.5em;
+  color: #fafafa;
+  background: #248dd6;
+}

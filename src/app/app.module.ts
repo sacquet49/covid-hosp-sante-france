@@ -10,7 +10,7 @@ import {registerLocaleData} from '@angular/common';
 import localeFr from '@angular/common/locales/fr';
 import {TabMenuModule} from 'primeng/tabmenu';
 import {CardModule} from 'primeng/card';
-import {HomeComponent} from './home/home.component';
+import {HospAgeComponent} from './hosp-age/hosp-age.component';
 import {HospitaliseService} from './services/hospitalise.service';
 import {MenubarModule} from 'primeng/menubar';
 import {MenuModule} from 'primeng/menu';
@@ -22,6 +22,7 @@ import {CheckboxModule} from 'primeng/checkbox';
 import {CourbeHospCourantComponent} from './courbe-hosp-courant/courbe-hosp-courant.component';
 import {RadioButtonModule} from 'primeng/radiobutton';
 import {AdresseService} from './services/adresse.service';
+import { HomeComponent } from './home/home.component';
 
 // the second parameter 'fr' is optional
 registerLocaleData(localeFr, 'fr');
@@ -29,14 +30,16 @@ registerLocaleData(localeFr, 'fr');
 const appRoutes: Routes = [
   {path: '', redirectTo: 'home', pathMatch: 'full'},
   {path: 'home', component: HomeComponent},
+  {path: 'age', component: HospAgeComponent},
   {path: 'courant', component: CourbeHospCourantComponent},
 ];
 
 @NgModule({
   declarations: [
     AppComponent,
-    HomeComponent,
-    CourbeHospCourantComponent
+    HospAgeComponent,
+    CourbeHospCourantComponent,
+    HomeComponent
   ],
   imports: [
     RouterModule.forRoot(appRoutes, {enableTracing: false}),

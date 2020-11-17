@@ -13,6 +13,7 @@ export class AppComponent implements OnInit {
 
   tabMenuItems: MenuItem[] = [
     {label: '', icon: 'pi pi-home', routerLink: ['home']},
+    {label: 'Hospitalisation par âges', icon: 'pi pi-chart-bar', routerLink: ['age']},
     {label: 'Courbe hospitaliser courant', icon: 'pi pi-chart-line', routerLink: ['courant']},
   ];
   currantItem;

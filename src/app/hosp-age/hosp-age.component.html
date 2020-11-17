@@ -1,0 +1,53 @@
+<div class="p-col-10 p-offset-1">
+  <h1 class="ass-label-gray card">Graphique des patients covid à l'hôpital en France par tranche d'âge.</h1>
+
+  <div class="p-fluid p-grid p-formgrid p-mb-2">
+    <div class="p-field p-col-12 p-md-3">
+      <p-calendar [(ngModel)]="jour" [minDate]="minDate" [maxDate]="maxDate"
+                  [readonlyInput]="true" inputId="min-max"
+                  dateFormat="dd/mm/yy" [locale]="fr"
+                  placeholder="Choix d'une date" showButtonBar="true"
+                  (onClose)="refreshChart();refreshVariation()"></p-calendar>
+    </div>
+    <div class="p-field p-col-12 p-md-3" *ngIf="jour">
+      <p-calendar [(ngModel)]="jour2" showButtonBar="true"
+                  [minDate]="minDate" [maxDate]="maxDate"
+                  [readonlyInput]="true" inputId="min-max2"
+                  dateFormat="dd/mm/yy" [locale]="fr"
+                  placeholder="Choix d'une date pour comparaison"
+                  (onClose)="refreshChart();refreshVariation()"></p-calendar>
+    </div>
+    <div class="p-field-checkbox p-col-12 p-md-3">
+      <p-checkbox [(ngModel)]="proportion" (onChange)="refreshChart()"
+                  binary="true" inputId="binary"></p-checkbox>
+      <label for="binary">Visualisation en pourcentage %</label>
+    </div>
+    <div class="p-field-checkbox p-col-12 p-md-3" *ngIf="jour && jour2">
+      <p-checkbox [(ngModel)]="variation" (onChange)="refreshVariation()"
+                  binary="true" inputId="binary2"></p-checkbox>
+      <label for="binary2">Variation %</label>
+    </div>
+  </div>
+
+  <div class="p-grid p-mt-4 mb-5">
+    <p-chart *ngIf="jour && jour2 && variation" #chartVariation
+             type="bar" [data]="variationData" width="1250"
+             height="570" class="w-100"></p-chart>
+  </div>
+  <div class="p-grid p-mt-4 mb-5">
+    <p-chart #chart type="bar" [data]="data" width="1250" height="570" class="w-100"></p-chart>
+  </div>
+
+  <div class="p-fluid p-grid p-formgrid p-mb-2">
+    <div class="p-field-checkbox p-col-12 p-md-3">
+      <p-checkbox [(ngModel)]="proportionDece" (onChange)="updateChartDece()"
+                  binary="true" inputId="binary3"></p-checkbox>
+      <label for="binary3">Visualisation en pourcentage %</label>
+    </div>
+  </div>
+  <div class="p-grid p-mt-4 mb-5">
+    <p-chart #chartDece type="bar" [data]="dataDece"
+             width="1250" height="570" class="w-100"></p-chart>
+  </div>
+
+</div>
