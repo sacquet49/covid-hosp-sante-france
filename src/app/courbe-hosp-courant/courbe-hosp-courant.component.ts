@@ -23,6 +23,7 @@ export class CourbeHospCourantComponent implements AfterViewInit {
   departementsDrop: SelectItem[];
   LABEL_HOSPITALISATION = `Patients covid hospitaliser`;
   LABEL_REANIMATION = `Patients covid en réanimation`;
+  LABEL_HOSP_REANIMATION = `Patients covid hospitaliser et en réanimation`;
   @ViewChild('chart')
   chart: UIChart;
   @ViewChild('chartDece')
@@ -61,6 +62,7 @@ export class CourbeHospCourantComponent implements AfterViewInit {
       this.data.labels = Object.entries(this.hospitaliseParJour).map(hospJour => hospJour['0']);
       this.updateChart('#0f29ae', this.LABEL_HOSPITALISATION, 'hosp', this.ENUM_SEX.TOUS);
       this.updateChart('#e00101', this.LABEL_REANIMATION, 'rea', this.ENUM_SEX.TOUS);
+      this.updateChart('#108f05', this.LABEL_HOSP_REANIMATION, ['hosp', 'rea'], this.ENUM_SEX.TOUS);
     }
     if (this.hospService.csv[1].data.length > 0 && this.decesParJour.length === 0) {
       this.decesParJour = this.hospService.csv[1].data.reduce((r, v, i, a, k = v.jour) => ((r[k] || (r[k] = [])).push(v), r), {});
@@ -77,10 +79,26 @@ export class CourbeHospCourantComponent implements AfterViewInit {
     this.data.datasets = [];
     this.updateChart('#0f29ae', this.LABEL_HOSPITALISATION, 'hosp', this.sexSelected);
     this.updateChart('#e00101', this.LABEL_REANIMATION, 'rea', this.sexSelected);
+    this.updateChart('#108f05', this.LABEL_HOSP_REANIMATION, ['hosp', 'rea'], this.sexSelected);
   }
 
   updateChart(couleur: any, label: any, filtre: any, sex: string): void {
-    const data = this.gethospitaliseByFilter(filtre, sex);
+    let data = [];
+    if (typeof filtre === 'string') {
+      data = this.gethospitaliseByFilter(filtre, sex);
+    } else {
+      filtre?.forEach((f, i) => {
+        if (i === 0) {
+          data = this.gethospitaliseByFilter(f, sex);
+        } else {
+          // tslint:disable-next-line:no-shadowed-variable
+          this.gethospitaliseByFilter(f, sex)?.forEach((d, i: number) => {
+            // tslint:disable-next-line:radix
+            data[i] = parseInt(data[i]) + parseInt(d);
+          });
+        }
+      });
+    }
     this.data.datasets.push({
       label: `${label}`,
       fill: false,
