@@ -77,7 +77,6 @@ export class CourbeHospCourantComponent implements AfterViewInit {
     this.data.datasets = [];
     this.updateChart('#0f29ae', this.LABEL_HOSPITALISATION, 'hosp', this.sexSelected);
     this.updateChart('#e00101', this.LABEL_REANIMATION, 'rea', this.sexSelected);
-    this.updateChart('#108f05', this.LABEL_HOSP_REANIMATION, ['hosp', 'rea'], this.sexSelected);
   }
 
   updateChart(couleur: any, label: any, filtre: any, sex: string): void {
