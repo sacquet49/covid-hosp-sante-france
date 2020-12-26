@@ -56,14 +56,14 @@ export class CourbeHospCourantComponent implements AfterViewInit {
   }
 
   init(): void {
-    if (this.hospService.csv[0].data.length > 0 && this.hospitaliseParJour.length === 0) {
-      this.hospitaliseParJour = this.hospService.csv[0].data.reduce((r, v, i, a, k = v.jour) => ((r[k] || (r[k] = [])).push(v), r), {});
+    if (this.hospService.csv[1].data.length > 0 && this.hospitaliseParJour.length === 0) {
+      this.hospitaliseParJour = this.hospService.csv[1].data.reduce((r, v, i, a, k = v.jour) => ((r[k] || (r[k] = [])).push(v), r), {});
       this.data.labels = Object.entries(this.hospitaliseParJour).map(hospJour => hospJour['0']);
       this.updateChart('#0f29ae', this.LABEL_HOSPITALISATION, 'hosp', this.ENUM_SEX.TOUS);
       this.updateChart('#e00101', this.LABEL_REANIMATION, 'rea', this.ENUM_SEX.TOUS);
     }
-    if (this.hospService.csv[1].data.length > 0 && this.decesParJour.length === 0) {
-      this.decesParJour = this.hospService.csv[1].data.reduce((r, v, i, a, k = v.jour) => ((r[k] || (r[k] = [])).push(v), r), {});
+    if (this.hospService.csv[2].data.length > 0 && this.decesParJour.length === 0) {
+      this.decesParJour = this.hospService.csv[2].data.reduce((r, v, i, a, k = v.jour) => ((r[k] || (r[k] = [])).push(v), r), {});
       this.dataDece.labels = Object.entries(this.hospitaliseParJour).map(hospJour => hospJour['0']);
       this.updateChartDece();
 
