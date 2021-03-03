@@ -38,6 +38,10 @@
     <p-chart #chart type="bar" [data]="data" width="1250" height="570" class="w-100"></p-chart>
   </div>
 
+  <div class="p-grid p-mt-4 mb-5">
+    <p-chart #chartEvolution type="line" [data]="dataEvolution" width="1250" height="570" class="w-100"></p-chart>
+  </div>
+
   <div class="p-fluid p-grid p-formgrid p-mb-2">
     <div class="p-field-checkbox p-col-12 p-md-3">
       <p-checkbox [(ngModel)]="proportionDece" (onChange)="updateChartDece()"

@@ -23,21 +23,39 @@ export class HospAgeComponent implements AfterViewInit, OnInit {
   chartVariation: UIChart;
   @ViewChild('chartDece')
   chartDece: UIChart;
+  @ViewChild('chartEvolution')
+  chartEvolution: UIChart;
   hospitaliseParJour = [];
+  hospitaliseParTrancheAge = [];
   minDate;
   maxDate;
   jour;
   jour2;
+  trancheAge = [{indice: '09', label: '0 - 9', color: '#0050ff'},
+    {indice: '19', label: '10 - 19', color: '#ff00e5'},
+    {indice: '29', label: '20 - 29', color: '#00f7ff'},
+    {indice: '39', label: '30 - 39', color: '#6aff00'},
+    {indice: '49', label: '40 - 49', color: '#ff0000'},
+    {indice: '59', label: '50 - 59', color: '#ff7700'},
+    {indice: '69', label: '60 - 69', color: '#9500ff'},
+    {indice: '79', label: '70 - 79', color: '#d0ff00'},
+    {indice: '89', label: '80 - 89', color: '#0b0b18'},
+    {indice: '90', label: '>90', color: '#02a705'}];
+  label = ['0 - 9', '10 - 19', '20 - 29', '30 - 39', '40 - 49', '50 - 59', '60 - 69', '70 - 79', '80 - 89', '>90'];
   data = {
-    labels: ['0- 9', '10 - 19', '20 - 29', '30 - 39', '40 - 49', '50 - 59', '60 - 69', '70 - 79', '80 - 89', '>90'],
+    labels: this.label,
     datasets: []
   };
   dataDece = {
-    labels: ['0- 9', '10 - 19', '20 - 29', '30 - 39', '40 - 49', '50 - 59', '60 - 69', '70 - 79', '80 - 89', '>90'],
+    labels: this.label,
     datasets: []
   };
   variationData = {
-    labels: ['0- 9', '10 - 19', '20 - 29', '30 - 39', '40 - 49', '50 - 59', '60 - 69', '70 - 79', '80 - 89', '>90'],
+    labels: this.label,
+    datasets: []
+  };
+  dataEvolution = {
+    labels: [],
     datasets: []
   };
   fr = fr;
@@ -61,9 +79,12 @@ export class HospAgeComponent implements AfterViewInit, OnInit {
   init(): void {
     if (this.hospService.csv[3].data.length > 0 && this.hospitaliseParJour.length === 0) {
       this.hospitaliseParJour = this.hospService.csv[3].data.reduce((r, v, i, a, k = v.jour) => ((r[k] || (r[k] = [])).push(v), r), {});
+      this.hospitaliseParTrancheAge = this.hospService.csv[3].data.reduce((r, v, i, a, k = v.cl_age90) => ((r[k] || (r[k] = [])).push(v), r), {});
       const maxDatePossible = Object.entries(this.hospitaliseParJour)[Object.entries(this.hospitaliseParJour).length - 2][0];
       this.maxDate = moment(maxDatePossible, 'YYYY-MM-DD').toDate();
       this.jour = this.jour ? this.jour : this.maxDate;
+      this.dataEvolution.labels = Object.entries(this.hospitaliseParJour).map(hospJour => hospJour['0']);
+      this.getEvolutionParTrancheAge();
     }
   }
 
@@ -118,6 +139,7 @@ export class HospAgeComponent implements AfterViewInit, OnInit {
     const dateString = moment(this.maxDate).format('YYYY-MM-DD');
     const dateFr = moment(this.maxDate).format('DD-MM-YYYY');
     let data = this.gethospitaliseByFilterAndDate('dc', dateString);
+    console.log(data);
     const total = this.hospService.reduceAdd(data);
     if (this.proportionDece) {
       data = data.map(d => this.hospService.roundDecimal((d * 100) / total, 2));
@@ -180,6 +202,32 @@ export class HospAgeComponent implements AfterViewInit, OnInit {
         .reduce((r, v, i, a, k = v.cl_age90) => ((r[k] || (r[k] = [])).push(v[filtre]) , r), {}))
         .map((ha: any) => hospitalise.push(this.hospService.reduceAdd(ha['1'])));
     }
+    return hospitalise.slice(1);
+  }
+
+  getEvolutionParTrancheAge(): void {
+    if (this.chartEvolution) {
+      this.chartEvolution.reinit();
+      this.chartEvolution.refresh();
+    }
+    this.dataEvolution.datasets = [];
+    this.trancheAge.forEach(t => {
+      this.dataEvolution.datasets.push({
+        label: `${t.label}`,
+        fill: false,
+        borderColor: t.color,
+        data: this.getHospitaliseByAge(t.indice)
+      });
+      this.chartEvolution.refresh();
+      this.chartEvolution.refresh();
+    });
+  }
+
+  getHospitaliseByAge(trancheAge: string): any[] {
+    const hospitalise = [];
+    Object.entries(this.hospitaliseParTrancheAge[trancheAge]
+      .reduce((r, v, i, a, k = v.jour) => ((r[k] || (r[k] = [])).push(v['hosp']) , r), {}))
+      .map((ha: any) => hospitalise.push(this.hospService.reduceAdd(ha['1'])));
     return hospitalise.slice(1);
   }
 }

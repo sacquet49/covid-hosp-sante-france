@@ -145,9 +145,6 @@ export class CourbeHospCourantComponent implements AfterViewInit {
 
     updateChartHospEcartType(): void {
         const data = this.gethospitaliseByFilter('hosp', this.ENUM_SEX.TOUS);
-
-        // const dataStd = data.map((v, i) => data[i + 1] && v ? (v < data[i + 1] ? (data[i + 1] - v) : (v - data[i + 1])) : undefined);
-
         let dataStd = data.map((v, i) => data[i + 1] && v ? math.std(v, data[i + 1]) : undefined);
         dataStd = dataStd.map((v, i) => dataStd[i + 1] && v ? (v + dataStd[i + 1]) / 2 : undefined);
         this.dataHospEcartType.datasets.push({
