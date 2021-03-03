@@ -12,6 +12,10 @@ export class AdresseService {
         return this.http.get('https://geo.api.gouv.fr/departements?fields=nom,code,codeRegion');
     }
 
+    getAllRegion(): Observable<any> {
+        return this.http.get('https://geo.api.gouv.fr/regions?fields=nom,code');
+    }
+
     getVilleByRegion(region: string): Observable<any> {
         return this.http.get(`https://geo.api.gouv.fr/departements/${region}/communes?fields=nom,code,codesPostaux,codeDepartement,codeRegion,population`);
     }

@@ -3,6 +3,9 @@ import {HospitaliseService} from '../services/hospitalise.service';
 import * as moment from 'moment';
 import {UIChart} from 'primeng/chart';
 import {fr} from '../services/local';
+import {SelectItem} from 'primeng/api';
+import {AdresseService} from '../services/adresse.service';
+import {Dropdown} from 'primeng/dropdown';
 
 @Component({
   selector: 'home',
@@ -18,6 +21,9 @@ export class HospAgeComponent implements AfterViewInit, OnInit {
   proportionDece = false;
   proportionEvoAge = false;
   variation = false;
+  regions: any = [];
+  regionSelected: string;
+  regionsDrop: SelectItem[];
   @ViewChild('chart')
   chart: UIChart;
   @ViewChild('chartVariation')
@@ -26,6 +32,8 @@ export class HospAgeComponent implements AfterViewInit, OnInit {
   chartDece: UIChart;
   @ViewChild('chartEvolution')
   chartEvolution: UIChart;
+  @ViewChild('region')
+  region: Dropdown;
   hospitaliseParJour = [];
   hospitaliseParTrancheAge = [];
   minDate;
@@ -61,7 +69,11 @@ export class HospAgeComponent implements AfterViewInit, OnInit {
   };
   fr = fr;
 
-  constructor(private hospService: HospitaliseService) {
+  constructor(private hospService: HospitaliseService, private adresseService: AdresseService) {
+    this.adresseService.getAllRegion().subscribe(rep => {
+      this.regions = rep;
+      this.regionsDrop = this.regions.map(reg => ({label: reg.code + ' - ' + reg.nom, value: reg.code}));
+    });
   }
 
   ngOnInit(): void {
@@ -207,25 +219,30 @@ export class HospAgeComponent implements AfterViewInit, OnInit {
   }
 
   getEvolutionParTrancheAge(): void {
+    if (!this.regionSelected) {
+      this.region.resetFilter();
+    }
     const evolutionByAge = [];
     if (this.chartEvolution) {
       this.chartEvolution.reinit();
       this.chartEvolution.refresh();
     }
     this.dataEvolution.datasets = [];
-    if (evolutionByAge.length === 0) {
-      this.trancheAge.forEach(t => {
-        evolutionByAge[t.indice] = this.getHospitaliseByAge(t.indice);
-      });
+    this.trancheAge.forEach(t => {
+      evolutionByAge[t.indice] = this.getHospitaliseByAge(t.indice);
+    });
 
-      for (let i = 0; i < evolutionByAge['09'].length; i++) {
-        const total = this.hospService.reduceAdd(evolutionByAge.map(t => t[i]));
-        this.trancheAge.forEach(t => {
-          evolutionByAge[t.indice][i] = this.hospService.roundDecimal((evolutionByAge[t.indice][i] * 100) / total, 2);
-        });
-      }
+    for (let i = 0; i < evolutionByAge['09'].length; i++) {
+      const total = this.hospService.reduceAdd(evolutionByAge.map(t => t[i]));
+      this.trancheAge.forEach(t => {
+        evolutionByAge[t.indice][i] = this.hospService.roundDecimal((evolutionByAge[t.indice][i] * 100) / total, 2);
+      });
     }
 
+    this.printValueOnGraph(evolutionByAge);
+  }
+
+  private printValueOnGraph(evolutionByAge: any[]): void {
     this.trancheAge.forEach(t => {
       this.dataEvolution.datasets.push({
         label: `${t.label}`,
@@ -240,9 +257,16 @@ export class HospAgeComponent implements AfterViewInit, OnInit {
 
   getHospitaliseByAge(trancheAge: string): any[] {
     const hospitalise = [];
-    Object.entries(this.hospitaliseParTrancheAge[trancheAge]
-      .reduce((r, v, i, a, k = v.jour) => ((r[k] || (r[k] = [])).push(v['hosp']) , r), {}))
-      .map((ha: any) => hospitalise.push(this.hospService.reduceAdd(ha['1'])));
+    if (this.regionSelected) {
+      Object.entries(this.hospitaliseParTrancheAge[trancheAge]
+        .filter((ha: any) => ha.reg === this.regionSelected)
+        .reduce((r, v, i, a, k = v.jour) => ((r[k] || (r[k] = [])).push(v['hosp']) , r), {}))
+        .map((ha: any) => hospitalise.push(this.hospService.reduceAdd(ha['1'])));
+    } else {
+      Object.entries(this.hospitaliseParTrancheAge[trancheAge]
+        .reduce((r, v, i, a, k = v.jour) => ((r[k] || (r[k] = [])).push(v['hosp']) , r), {}))
+        .map((ha: any) => hospitalise.push(this.hospService.reduceAdd(ha['1'])));
+    }
     return hospitalise.slice(1);
   }
 }
