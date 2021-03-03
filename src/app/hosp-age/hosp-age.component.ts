@@ -16,6 +16,7 @@ export class HospAgeComponent implements AfterViewInit, OnInit {
   LABEL_DECEDE = `Nombre cumulé de personnes décédées au `;
   proportion = false;
   proportionDece = false;
+  proportionEvoAge = false;
   variation = false;
   @ViewChild('chart')
   chart: UIChart;
@@ -139,7 +140,6 @@ export class HospAgeComponent implements AfterViewInit, OnInit {
     const dateString = moment(this.maxDate).format('YYYY-MM-DD');
     const dateFr = moment(this.maxDate).format('DD-MM-YYYY');
     let data = this.gethospitaliseByFilterAndDate('dc', dateString);
-    console.log(data);
     const total = this.hospService.reduceAdd(data);
     if (this.proportionDece) {
       data = data.map(d => this.hospService.roundDecimal((d * 100) / total, 2));
@@ -207,17 +207,31 @@ export class HospAgeComponent implements AfterViewInit, OnInit {
   }
 
   getEvolutionParTrancheAge(): void {
+    const evolutionByAge = [];
     if (this.chartEvolution) {
       this.chartEvolution.reinit();
       this.chartEvolution.refresh();
     }
     this.dataEvolution.datasets = [];
+    if (evolutionByAge.length === 0) {
+      this.trancheAge.forEach(t => {
+        evolutionByAge[t.indice] = this.getHospitaliseByAge(t.indice);
+      });
+
+      for (let i = 0; i < evolutionByAge['09'].length; i++) {
+        const total = this.hospService.reduceAdd(evolutionByAge.map(t => t[i]));
+        this.trancheAge.forEach(t => {
+          evolutionByAge[t.indice][i] = this.hospService.roundDecimal((evolutionByAge[t.indice][i] * 100) / total, 2);
+        });
+      }
+    }
+
     this.trancheAge.forEach(t => {
       this.dataEvolution.datasets.push({
         label: `${t.label}`,
         fill: false,
         borderColor: t.color,
-        data: this.getHospitaliseByAge(t.indice)
+        data: this.proportionEvoAge ? evolutionByAge[t.indice] : this.getHospitaliseByAge(t.indice)
       });
       this.chartEvolution.refresh();
       this.chartEvolution.refresh();
