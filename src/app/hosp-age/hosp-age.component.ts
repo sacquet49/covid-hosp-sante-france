@@ -21,6 +21,7 @@ export class HospAgeComponent implements AfterViewInit, OnInit {
   proportionDece = false;
   proportionEvoAge = false;
   variation = false;
+  isRea = false;
   regions: any = [];
   regionSelected: string;
   regionsDrop: SelectItem[];
@@ -257,14 +258,15 @@ export class HospAgeComponent implements AfterViewInit, OnInit {
 
   getHospitaliseByAge(trancheAge: string): any[] {
     const hospitalise = [];
+    const reaOrHosp = this.isRea ? 'rea' : 'hosp';
     if (this.regionSelected) {
       Object.entries(this.hospitaliseParTrancheAge[trancheAge]
         .filter((ha: any) => ha.reg === this.regionSelected)
-        .reduce((r, v, i, a, k = v.jour) => ((r[k] || (r[k] = [])).push(v['hosp']) , r), {}))
+        .reduce((r, v, i, a, k = v.jour) => ((r[k] || (r[k] = [])).push(v[reaOrHosp]) , r), {}))
         .map((ha: any) => hospitalise.push(this.hospService.reduceAdd(ha['1'])));
     } else {
       Object.entries(this.hospitaliseParTrancheAge[trancheAge]
-        .reduce((r, v, i, a, k = v.jour) => ((r[k] || (r[k] = [])).push(v['hosp']) , r), {}))
+        .reduce((r, v, i, a, k = v.jour) => ((r[k] || (r[k] = [])).push(v[reaOrHosp]) , r), {}))
         .map((ha: any) => hospitalise.push(this.hospService.reduceAdd(ha['1'])));
     }
     return hospitalise.slice(1);

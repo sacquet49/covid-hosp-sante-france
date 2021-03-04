@@ -45,6 +45,11 @@
                   binary="true" inputId="binary3"></p-checkbox>
       <label for="binary3">Visualisation en pourcentage %</label>
     </div>
+    <div class="p-field-checkbox p-col-12 p-md-3">
+      <p-checkbox [(ngModel)]="isRea" (onChange)="getEvolutionParTrancheAge()"
+                  binary="true" inputId="binary"></p-checkbox>
+      <label for="binary5">Visualisation des réanimations</label>
+    </div>
     <div class="p-field p-col-12 p-md-3">
       <p-dropdown [options]="regionsDrop" [(ngModel)]="regionSelected"
                   [style]="{'width':'100%'}" filter="true" (onChange)="getEvolutionParTrancheAge()"
