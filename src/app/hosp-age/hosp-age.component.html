@@ -8,7 +8,7 @@
     <div class="p-field p-col-12 p-md-3">
       <p-calendar [(ngModel)]="jour" [minDate]="minDate" [maxDate]="maxDate"
                   [readonlyInput]="true" inputId="min-max"
-                  dateFormat="dd/mm/yy" [locale]="fr"
+                  dateFormat="dd/mm/yy"
                   placeholder="Choix d'une date" showButtonBar="true"
                   (onClose)="refreshChart();refreshVariation()"></p-calendar>
     </div>
@@ -16,7 +16,7 @@
       <p-calendar [(ngModel)]="jour2" showButtonBar="true"
                   [minDate]="minDate" [maxDate]="maxDate"
                   [readonlyInput]="true" inputId="min-max2"
-                  dateFormat="dd/mm/yy" [locale]="fr"
+                  dateFormat="dd/mm/yy"
                   placeholder="Choix d'une date pour comparaison"
                   (onClose)="refreshChart();refreshVariation()"></p-calendar>
     </div>

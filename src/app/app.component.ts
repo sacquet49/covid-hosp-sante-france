@@ -1,8 +1,7 @@
 import {Component, OnInit} from '@angular/core';
-import {MenuItem} from 'primeng/api';
+import {MenuItem, PrimeNGConfig} from 'primeng/api';
 import {Location} from '@angular/common';
 import {HospitaliseService} from './services/hospitalise.service';
-import {Subscription} from 'rxjs';
 
 @Component({
   selector: 'app-root',
@@ -19,13 +18,24 @@ export class AppComponent implements OnInit {
   currantItem;
   csvIsInit = false;
 
-  constructor(private location: Location, private newsService: HospitaliseService) {
+  constructor(private location: Location, private newsService: HospitaliseService,
+              private config: PrimeNGConfig) {
     this.newsService.getCsv().subscribe(csv => {
       this.csvIsInit = csv[3].data.length > 0;
     });
   }
 
   ngOnInit(): void {
+    this.config.setTranslation({
+      dayNames: ['Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi'],
+      dayNamesShort: ['Dim', 'Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam'],
+      dayNamesMin: ['Di', 'Lu', 'Ma', 'Me', 'Je', 'Ve', 'Sa'],
+      monthNames: ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'],
+      monthNamesShort: ['Jan', 'Fév', 'Mar', 'Avr', 'Mai', 'Jun', 'Jui', 'Aoû', 'Sep', 'Oct', 'Nov', 'Dec'],
+      today: 'Aujourd\'hui',
+      clear: 'Effacer',
+      weekHeader: 'Semaine'
+    });
     this.currantItem = this.location.path().replace('/', '') !== '' ?
       this.tabMenuItems
         .find(mi => this.location.path().replace('/', '').includes(mi.routerLink['0'])) :

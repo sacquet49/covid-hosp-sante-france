@@ -2,7 +2,6 @@ import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
 import {HospitaliseService} from '../services/hospitalise.service';
 import * as moment from 'moment';
 import {UIChart} from 'primeng/chart';
-import {fr} from '../services/local';
 
 @Component({
   selector: 'hosp-age',
@@ -41,7 +40,6 @@ export class HospAgeComponent implements AfterViewInit, OnInit {
     labels: this.label,
     datasets: []
   };
-  fr = fr;
 
   constructor(private hospService: HospitaliseService) {
   }

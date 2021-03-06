@@ -4,7 +4,6 @@ import {Dropdown} from 'primeng/dropdown';
 import {AdresseService} from '../../services/adresse.service';
 import {SelectItem} from 'primeng/api';
 import {HospitaliseService} from '../../services/hospitalise.service';
-import {fr} from 'src/app/services/local';
 import * as moment from 'moment';
 
 @Component({
@@ -52,7 +51,6 @@ export class HospAgeInTimeComponent implements OnInit {
     DC: 'dc'
   };
   typeStatSelected = this.TYPE_STAT.HOSP;
-  fr = fr;
 
   constructor(private hospService: HospitaliseService, private adresseService: AdresseService) {
     this.adresseService.getAllRegion().subscribe(rep => {

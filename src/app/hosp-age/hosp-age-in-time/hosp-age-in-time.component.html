@@ -37,9 +37,8 @@
 <div class="p-fluid p-grid p-formgrid p-mb-2">
   <div class="p-field p-col-12 p-md-3">
     <p-calendar [(ngModel)]="jours" [minDate]="minDate" [maxDate]="maxDate"
-                [readonlyInput]="true" inputId="min-max"
-                dateFormat="dd/mm/yy" [locale]="fr"
-                selectionMode="range"
+                [readonlyInput]="true" inputId="min-max3"
+                dateFormat="dd/mm/yy" selectionMode="range"
                 placeholder="Choix d'un interval de date" showButtonBar="true"
                 (onClose)="refreshVariation()"></p-calendar>
   </div>
