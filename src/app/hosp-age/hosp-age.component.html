@@ -1,6 +1,9 @@
 <div class="p-col-10 p-offset-1">
   <h1 class="ass-label-gray card">Graphique des patients covid à l'hôpital en France par tranche d'âge.</h1>
 
+  <app-hosp-age-in-time *ngIf="hospitaliseParJour.length !== 0 " [hospitaliseParJour]="hospitaliseParJour"
+                        [label]="label"></app-hosp-age-in-time>
+
   <div class="p-fluid p-grid p-formgrid p-mb-2">
     <div class="p-field p-col-12 p-md-3">
       <p-calendar [(ngModel)]="jour" [minDate]="minDate" [maxDate]="maxDate"
@@ -38,8 +41,7 @@
     <p-chart #chart type="bar" [data]="data" width="1250" height="570" class="w-100"></p-chart>
   </div>
 
-  <app-hosp-age-in-time *ngIf="hospitaliseParJour.length !== 0 " [hospitaliseParJour]="hospitaliseParJour"
-                        [label]="label"></app-hosp-age-in-time>
+
 
   <div class="p-fluid p-grid p-formgrid p-mb-2">
     <div class="p-field-checkbox p-col-12 p-md-3">

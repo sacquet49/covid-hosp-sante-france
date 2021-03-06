@@ -15,7 +15,6 @@ export class HospAgeInTimeComponent implements OnInit {
   chartEvolution: UIChart;
   @ViewChild('region')
   region: Dropdown;
-  isRea = false;
   dataEvolution = {
     labels: [],
     datasets: []
@@ -39,6 +38,12 @@ export class HospAgeInTimeComponent implements OnInit {
     {indice: '79', label: '70 - 79', color: '#d0ff00'},
     {indice: '89', label: '80 - 89', color: '#0b0b18'},
     {indice: '90', label: '>90', color: '#02a705'}];
+  TYPE_STAT = {
+    HOSP: 'hosp',
+    REA: 'rea',
+    DC: 'dc'
+  };
+  typeStatSelected = this.TYPE_STAT.HOSP;
 
   constructor(private hospService: HospitaliseService, private adresseService: AdresseService) {
     this.adresseService.getAllRegion().subscribe(rep => {
@@ -98,15 +103,14 @@ export class HospAgeInTimeComponent implements OnInit {
 
   getHospitaliseByAge(trancheAge: string): any[] {
     const hospitalise = [];
-    const reaOrHosp = this.isRea ? 'rea' : 'hosp';
     if (this.regionSelected) {
       Object.entries(this.hospitaliseParTrancheAge[trancheAge]
         .filter((ha: any) => ha.reg === this.regionSelected)
-        .reduce((r, v, i, a, k = v.jour) => ((r[k] || (r[k] = [])).push(v[reaOrHosp]) , r), {}))
+        .reduce((r, v, i, a, k = v.jour) => ((r[k] || (r[k] = [])).push(v[this.typeStatSelected]) , r), {}))
         .map((ha: any) => hospitalise.push(this.hospService.reduceAdd(ha['1'])));
     } else {
       Object.entries(this.hospitaliseParTrancheAge[trancheAge]
-        .reduce((r, v, i, a, k = v.jour) => ((r[k] || (r[k] = [])).push(v[reaOrHosp]) , r), {}))
+        .reduce((r, v, i, a, k = v.jour) => ((r[k] || (r[k] = [])).push(v[this.typeStatSelected]) , r), {}))
         .map((ha: any) => hospitalise.push(this.hospService.reduceAdd(ha['1'])));
     }
     return hospitalise.slice(1);
