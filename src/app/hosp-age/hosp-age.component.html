@@ -2,7 +2,7 @@
   <h1 class="ass-label-gray card">Graphique des patients covid à l'hôpital en France par tranche d'âge.</h1>
 
   <app-hosp-age-in-time *ngIf="hospitaliseParJour.length !== 0 " [hospitaliseParJour]="hospitaliseParJour"
-                        [label]="label"></app-hosp-age-in-time>
+                        [label]="label" [minDate]="minDate" [maxDate]="maxDate"></app-hosp-age-in-time>
 
   <div class="p-fluid p-grid p-formgrid p-mb-2">
     <div class="p-field p-col-12 p-md-3">

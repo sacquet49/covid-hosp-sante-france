@@ -34,6 +34,16 @@
     </p-dropdown>
   </div>
 </div>
+<div class="p-fluid p-grid p-formgrid p-mb-2">
+  <div class="p-field p-col-12 p-md-3">
+    <p-calendar [(ngModel)]="jours" [minDate]="minDate" [maxDate]="maxDate"
+                [readonlyInput]="true" inputId="min-max"
+                dateFormat="dd/mm/yy" [locale]="fr"
+                selectionMode="range"
+                placeholder="Choix d'une date" showButtonBar="true"
+                (onClose)="refreshVariation();getEvolutionParTrancheAge()"></p-calendar>
+  </div>
+</div>
 <div class="p-grid p-mt-4 mb-5">
   <p-chart #chartEvolution type="line" [data]="dataEvolution" width="1250" height="570" class="w-100"></p-chart>
 </div>

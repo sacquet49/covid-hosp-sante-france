@@ -4,6 +4,8 @@ import {Dropdown} from 'primeng/dropdown';
 import {AdresseService} from '../../services/adresse.service';
 import {SelectItem} from 'primeng/api';
 import {HospitaliseService} from '../../services/hospitalise.service';
+import { fr } from 'src/app/services/local';
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-hosp-age-in-time',
@@ -23,6 +25,12 @@ export class HospAgeInTimeComponent implements OnInit {
   hospitaliseParJour;
   @Input()
   label;
+  @Input()
+  minDate;
+  @Input()
+  maxDate;
+  jours;
+  joursSelected = [];
   regions: any = [];
   regionSelected: string;
   regionsDrop: SelectItem[];
@@ -44,6 +52,7 @@ export class HospAgeInTimeComponent implements OnInit {
     DC: 'dc'
   };
   typeStatSelected = this.TYPE_STAT.HOSP;
+  fr = fr;
 
   constructor(private hospService: HospitaliseService, private adresseService: AdresseService) {
     this.adresseService.getAllRegion().subscribe(rep => {
@@ -59,12 +68,13 @@ export class HospAgeInTimeComponent implements OnInit {
   init(): void {
     if (this.hospService.csv[3].data.length > 0) {
       this.hospitaliseParTrancheAge = this.hospService.csv[3].data.reduce((r, v, i, a, k = v.cl_age90) => ((r[k] || (r[k] = [])).push(v), r), {});
-      this.dataEvolution.labels = Object.entries(this.hospitaliseParJour).map(hospJour => hospJour['0']);
       this.getEvolutionParTrancheAge();
     }
   }
 
   getEvolutionParTrancheAge(): void {
+    this.dataEvolution.labels = Object.entries(this.hospitaliseParJour).map(hospJour => hospJour['0'])
+      .filter((ha: any) => (this.joursSelected.length === 2) ? (ha >= this.joursSelected[0] && ha <= this.joursSelected[1]) : true);
     if (!this.regionSelected) {
       this.region.resetFilter();
     }
@@ -103,17 +113,34 @@ export class HospAgeInTimeComponent implements OnInit {
 
   getHospitaliseByAge(trancheAge: string): any[] {
     const hospitalise = [];
-    if (this.regionSelected) {
-      Object.entries(this.hospitaliseParTrancheAge[trancheAge]
-        .filter((ha: any) => ha.reg === this.regionSelected)
-        .reduce((r, v, i, a, k = v.jour) => ((r[k] || (r[k] = [])).push(v[this.typeStatSelected]) , r), {}))
-        .map((ha: any) => hospitalise.push(this.hospService.reduceAdd(ha['1'])));
-    } else {
-      Object.entries(this.hospitaliseParTrancheAge[trancheAge]
-        .reduce((r, v, i, a, k = v.jour) => ((r[k] || (r[k] = [])).push(v[this.typeStatSelected]) , r), {}))
-        .map((ha: any) => hospitalise.push(this.hospService.reduceAdd(ha['1'])));
-    }
+    Object.entries(this.hospitaliseParTrancheAge[trancheAge]
+      .filter((ha: any) => {
+        if (this.joursSelected.length === 2) {
+          return (ha.jour >= this.joursSelected[0] && new Date(ha.jour) <= this.addDays(this.joursSelected[1], 1)) && (this.regionSelected ? ha.reg === this.regionSelected : true);
+        } else if (this.regionSelected) {
+          return ha.reg === this.regionSelected;
+        } else {
+          return true;
+        }
+      })
+      .reduce((r, v, i, a, k = v.jour) => ((r[k] || (r[k] = [])).push(v[this.typeStatSelected]) , r), {}))
+      .map((ha: any) => hospitalise.push(this.hospService.reduceAdd(ha['1'])));
     return hospitalise.slice(1);
   }
 
+  refreshVariation(): void {
+    this.joursSelected = [];
+    if (this.jours && this.jours[1]) {
+      const jourMin = this.jours[0] && !this.jours[1] ? this.jours[0] : (this.jours[0] < this.jours[1] ? this.jours[0] : this.jours[1]);
+      const jourMax = this.jours[0] && this.jours[1] && this.jours[0] > this.jours[1] ? this.jours[0] : this.jours[1];
+      this.joursSelected.push(moment(jourMin).format('YYYY-MM-DD'));
+      this.joursSelected.push(moment(jourMax).format('YYYY-MM-DD'));
+    }
+  }
+
+  addDays(date, days): Date {
+    const result = new Date(date);
+    result.setDate(result.getDate() + days);
+    return result;
+  }
 }
