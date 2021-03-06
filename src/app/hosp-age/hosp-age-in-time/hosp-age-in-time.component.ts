@@ -130,6 +130,7 @@ export class HospAgeInTimeComponent implements OnInit {
 
   refreshVariation(): void {
     if (this.jours && this.jours[1]) {
+      this.joursSelected = [];
       const jourMin = this.jours[0] && !this.jours[1] ? this.jours[0] : (this.jours[0] < this.jours[1] ? this.jours[0] : this.jours[1]);
       const jourMax = this.jours[0] && this.jours[1] && this.jours[0] > this.jours[1] ? this.jours[0] : this.jours[1];
       this.joursSelected.push(moment(jourMin).format('YYYY-MM-DD'));
