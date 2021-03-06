@@ -4,7 +4,7 @@ import {Dropdown} from 'primeng/dropdown';
 import {AdresseService} from '../../services/adresse.service';
 import {SelectItem} from 'primeng/api';
 import {HospitaliseService} from '../../services/hospitalise.service';
-import { fr } from 'src/app/services/local';
+import {fr} from 'src/app/services/local';
 import * as moment from 'moment';
 
 @Component({
@@ -129,12 +129,15 @@ export class HospAgeInTimeComponent implements OnInit {
   }
 
   refreshVariation(): void {
-    this.joursSelected = [];
     if (this.jours && this.jours[1]) {
       const jourMin = this.jours[0] && !this.jours[1] ? this.jours[0] : (this.jours[0] < this.jours[1] ? this.jours[0] : this.jours[1]);
       const jourMax = this.jours[0] && this.jours[1] && this.jours[0] > this.jours[1] ? this.jours[0] : this.jours[1];
       this.joursSelected.push(moment(jourMin).format('YYYY-MM-DD'));
       this.joursSelected.push(moment(jourMax).format('YYYY-MM-DD'));
+      this.getEvolutionParTrancheAge();
+    } else if (this.joursSelected.length === 2) {
+      this.joursSelected = [];
+      this.getEvolutionParTrancheAge();
     }
   }
 
