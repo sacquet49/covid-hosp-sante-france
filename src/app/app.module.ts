@@ -23,6 +23,7 @@ import {CourbeHospCourantComponent} from './courbe-hosp-courant/courbe-hosp-cour
 import {RadioButtonModule} from 'primeng/radiobutton';
 import {AdresseService} from './services/adresse.service';
 import { HomeComponent } from './home/home.component';
+import { HospAgeInTimeComponent } from './hosp-age/hosp-age-in-time/hosp-age-in-time.component';
 
 // the second parameter 'fr' is optional
 registerLocaleData(localeFr, 'fr');
@@ -39,7 +40,8 @@ const appRoutes: Routes = [
     AppComponent,
     HospAgeComponent,
     CourbeHospCourantComponent,
-    HomeComponent
+    HomeComponent,
+    HospAgeInTimeComponent
   ],
   imports: [
     RouterModule.forRoot(appRoutes, { enableTracing: false, relativeLinkResolution: 'legacy' }),

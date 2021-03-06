@@ -38,36 +38,8 @@
     <p-chart #chart type="bar" [data]="data" width="1250" height="570" class="w-100"></p-chart>
   </div>
 
-
-  <div class="p-fluid p-grid p-formgrid p-mb-2">
-    <div class="p-field-checkbox p-col-12 p-md-3">
-      <p-checkbox [(ngModel)]="proportionEvoAge" (onChange)="getEvolutionParTrancheAge()"
-                  binary="true" inputId="binary3"></p-checkbox>
-      <label for="binary3">Visualisation en pourcentage %</label>
-    </div>
-    <div class="p-field-checkbox p-col-12 p-md-3">
-      <p-checkbox [(ngModel)]="isRea" (onChange)="getEvolutionParTrancheAge()"
-                  binary="true" inputId="binary"></p-checkbox>
-      <label for="binary5">Visualisation des réanimations</label>
-    </div>
-    <div class="p-field p-col-12 p-md-3">
-      <p-dropdown [options]="regionsDrop" [(ngModel)]="regionSelected"
-                  [style]="{'width':'100%'}" filter="true" (onChange)="getEvolutionParTrancheAge()"
-                  [showClear]="true" placeholder="Région" #region>
-        <ng-template let-item pTemplate="selectedItem">
-          <span>{{item.label}}</span>
-        </ng-template>
-        <ng-template let-dep pTemplate="item">
-          <div class="ui-helper-clearfix">
-            {{dep.label}}
-          </div>
-        </ng-template>
-      </p-dropdown>
-    </div>
-  </div>
-  <div class="p-grid p-mt-4 mb-5">
-    <p-chart #chartEvolution type="line" [data]="dataEvolution" width="1250" height="570" class="w-100"></p-chart>
-  </div>
+  <app-hosp-age-in-time *ngIf="hospitaliseParJour.length !== 0 " [hospitaliseParJour]="hospitaliseParJour"
+                        [label]="label"></app-hosp-age-in-time>
 
   <div class="p-fluid p-grid p-formgrid p-mb-2">
     <div class="p-field-checkbox p-col-12 p-md-3">
