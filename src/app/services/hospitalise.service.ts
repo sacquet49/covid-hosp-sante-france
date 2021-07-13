@@ -27,7 +27,8 @@ export class HospitaliseService {
       const articlesDom = new DOMParser().parseFromString(rep, 'text/html')
         .querySelectorAll('article');
       for (let i = 0; i < 4; i++) {
-        this.csv[i].id = articlesDom[i].id?.replace('resource-', '');
+        // @ts-ignore
+        this.csv[i].id = articlesDom[i].childNodes[1]?.firstElementChild?.id?.replace('resource-', '').replace('-header', '');
         this.getCsvToPage(this.csv[i].id).subscribe(dataCsv => {
           this.csv[i].data = this.csvJSON(dataCsv);
           this.subjectCsvHospitalisation.next(this.csv);
