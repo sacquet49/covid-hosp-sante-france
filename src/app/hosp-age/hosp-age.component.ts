@@ -58,8 +58,8 @@ export class HospAgeComponent implements AfterViewInit, OnInit {
   }
 
   init(): void {
-    if (this.hospService.csv[3].data.length > 0 && this.hospitaliseParJour.length === 0) {
-      this.hospitaliseParJour = this.hospService.csv[3].data.reduce((r, v, i, a, k = v.jour) => ((r[k] || (r[k] = [])).push(v), r), {});
+    if (this.hospService.csv[4].data.length > 0 && this.hospitaliseParJour.length === 0) {
+      this.hospitaliseParJour = this.hospService.csv[4].data.reduce((r, v, i, a, k = v.jour) => ((r[k] || (r[k] = [])).push(v), r), {});
       const maxDatePossible = Object.entries(this.hospitaliseParJour)[Object.entries(this.hospitaliseParJour).length - 2][0];
       this.maxDate = moment(maxDatePossible, 'YYYY-MM-DD').toDate();
       this.jour = this.jour ? this.jour : this.maxDate;

@@ -9,6 +9,8 @@ export class HospitaliseService {
   private subjectCsvHospitalisation = new Subject<any>();
 
   csv = [
+    {nom: 'donnees-hospitalieres-classe-age-hebdo-covid19', id: '', data: []},
+    {nom: 'covid-hospit-incid-reg', id: '', data: []},
     {nom: 'donnees-hospitalieres-covid19', id: '', data: []},
     {nom: 'donnees-hospitalieres-nouveaux-covid19', id: '', data: []},
     {nom: 'donnees-hospitalieres-classe-age-covid19', id: '', data: []},
@@ -26,7 +28,7 @@ export class HospitaliseService {
     this.getDataPage().subscribe(rep => {
       const articlesDom = new DOMParser().parseFromString(rep, 'text/html')
         .querySelectorAll('article');
-      for (let i = 0; i < 4; i++) {
+      for (let i = 0; i < 6; i++) {
         // @ts-ignore
         this.csv[i].id = articlesDom[i].childNodes[1]?.firstElementChild?.id?.replace('resource-', '').replace('-header', '');
         this.getCsvToPage(this.csv[i].id).subscribe(dataCsv => {
