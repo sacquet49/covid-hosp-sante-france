@@ -1,9 +1,5 @@
-// Bootstrap 4 Required
-@import "../../node_modules/bootstrap/scss/functions";
-@import "../../node_modules/bootstrap/scss/variables";
-@import "../../node_modules/bootstrap/scss/mixins";
-// Bootstrap 4 Optional
-@import "../../node_modules/bootstrap/scss/utilities";
+// Bootstrap 5 Required
+@import "../../node_modules/bootstrap/scss/bootstrap-utilities";
 
 p-autocomplete {
   input {
