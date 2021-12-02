@@ -59,8 +59,8 @@ export class CourbeHospCourantComponent implements AfterViewInit {
     }
 
     init(): void {
-        if (this.hospService.csv[2].data.length > 0 && this.hospitaliseParJour.length === 0) {
-            this.hospitaliseParJour = this.hospService.csv[2].data.reduce((r, v, i, a, k = v.jour) => ((r[k] || (r[k] = []))
+        if (this.hospService.csv[5].data.length > 0 && this.hospitaliseParJour.length === 0) {
+            this.hospitaliseParJour = this.hospService.csv[5].data.reduce((r, v, i, a, k = v.jour) => ((r[k] || (r[k] = []))
                 .push(v), r), {});
             this.data.labels = Object.entries(this.hospitaliseParJour).map(hospJour => hospJour['0']);
             this.updateChart('#0f29ae', this.LABEL_HOSPITALISATION, 'hosp', this.ENUM_SEX.TOUS);
