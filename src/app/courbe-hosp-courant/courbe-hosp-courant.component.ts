@@ -66,8 +66,8 @@ export class CourbeHospCourantComponent implements AfterViewInit {
             this.updateChart('#0f29ae', this.LABEL_HOSPITALISATION, 'hosp', this.ENUM_SEX.TOUS);
             this.updateChart('#e00101', this.LABEL_REANIMATION, 'rea', this.ENUM_SEX.TOUS);
         }
-        if (this.hospService.csv[3].data.length > 0 && this.decesParJour.length === 0) {
-            this.decesParJour = this.hospService.csv[3].data.reduce((r, v, i, a, k = v.jour) => ((r[k] || (r[k] = [])).push(v), r), {});
+        if (this.hospService.csv[6].data.length > 0 && this.decesParJour.length === 0) {
+            this.decesParJour = this.hospService.csv[6].data.reduce((r, v, i, a, k = v.jour) => ((r[k] || (r[k] = [])).push(v), r), {});
             this.dataDece.labels = Object.entries(this.hospitaliseParJour).map(hospJour => hospJour['0']);
             this.updateChartDece();
 

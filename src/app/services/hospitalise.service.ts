@@ -9,6 +9,9 @@ export class HospitaliseService {
   private subjectCsvHospitalisation = new Subject<any>();
 
   csv = [
+    {nom: 'covid-hosp-txad-age-fra', id: '', data: []},
+    {nom: 'covid-hosp-txad-reg', id: '', data: []},
+    {nom: 'covid-hosp-txad-fra', id: '', data: []},
     {nom: 'donnees-hospitalieres-classe-age-hebdo-covid19', id: '', data: []},
     {nom: 'covid-hospit-incid-reg', id: '', data: []},
     {nom: 'donnees-hospitalieres-covid19', id: '', data: []},
@@ -25,13 +28,12 @@ export class HospitaliseService {
   }
 
   initDataPage(): void {
-    this.getDataPage().subscribe(rep => {
-      const articlesDom = new DOMParser().parseFromString(rep, 'text/html')
-        .querySelectorAll('article');
-      for (let i = 0; i < 6; i++) {
+    this.getAllCsv().subscribe(csvData => {
+      const jsonDataFilter: any[] = csvData.data.filter(j => !j.title.includes('metadonnees'));
+      for (let i = 0; i < 9; i++) {
         // @ts-ignore
-        this.csv[i].id = articlesDom[i].childNodes[1]?.firstElementChild?.id?.replace('resource-', '').replace('-header', '');
-        this.getCsvToPage(this.csv[i].id).subscribe(dataCsv => {
+        this.csv[i].id = jsonDataFilter[i].id;
+        this.getCsvByUrl(jsonDataFilter[i].latest).subscribe(dataCsv => {
           this.csv[i].data = this.csvJSON(dataCsv);
           this.subjectCsvHospitalisation.next(this.csv);
         });
@@ -42,6 +44,10 @@ export class HospitaliseService {
   getDataPage(): Observable<any> {
     return this.http.get('https://www.data.gouv.fr/fr/datasets/donnees-hospitalieres-relatives-a-lepidemie-de-covid-19/',
       {responseType: 'text'});
+  }
+
+  getCsvByUrl(url: string): Observable<any> {
+    return this.http.get(`${url}`, {responseType: 'text'});
   }
 
   getCsvToPage(id: string): Observable<any> {
@@ -77,5 +83,13 @@ export class HospitaliseService {
     precision = precision || 2;
     const tmp = Math.pow(10, precision);
     return Math.round(nombre * tmp) / tmp;
+  }
+
+  getAllCsv(): Observable<any> {
+    return this.http.get('https://www.data.gouv.fr/api/2/datasets/5e7e104ace2080d9162b61d8/resources/');
+  }
+
+  getAllHospData(): Observable<any> {
+    return this.http.get('https://ec2-13-38-104-219.eu-west-3.compute.amazonaws.com/data/live/france/all');
   }
 }

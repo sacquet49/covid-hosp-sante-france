@@ -64,8 +64,8 @@ export class HospAgeInTimeComponent implements OnInit {
   }
 
   init(): void {
-    if (this.hospService.csv[4].data.length > 0) {
-      this.hospitaliseParTrancheAge = this.hospService.csv[4].data.reduce((r, v, i, a, k = v.cl_age90) => ((r[k] || (r[k] = [])).push(v), r), {});
+    if (this.hospService.csv[7].data.length > 0) {
+      this.hospitaliseParTrancheAge = this.hospService.csv[7].data.reduce((r, v, i, a, k = v.cl_age90) => ((r[k] || (r[k] = [])).push(v), r), {});
       this.getEvolutionParTrancheAge();
     }
   }

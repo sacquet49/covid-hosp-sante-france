@@ -15,16 +15,4 @@ export class AdresseService {
     getAllRegion(): Observable<any> {
         return this.http.get('https://geo.api.gouv.fr/regions?fields=nom,code');
     }
-
-    getVilleByRegion(region: string): Observable<any> {
-        return this.http.get(`https://geo.api.gouv.fr/departements/${region}/communes?fields=nom,code,codesPostaux,codeDepartement,codeRegion,population`);
-    }
-
-    getGeocodingGouv(adresse: string): Observable<any> {
-        return this.http.get(`https://api-adresse.data.gouv.fr/search/?q=${adresse}&autocomplete=0`);
-    }
-
-    getAdresseGouv(adresse: string): Observable<any> {
-        return this.http.get(`https://api-adresse.data.gouv.fr/search/?q=${adresse}&limit=5`);
-    }
 }
