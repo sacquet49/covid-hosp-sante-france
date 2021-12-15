@@ -41,17 +41,8 @@ export class HospitaliseService {
     });
   }
 
-  getDataPage(): Observable<any> {
-    return this.http.get('https://www.data.gouv.fr/fr/datasets/donnees-hospitalieres-relatives-a-lepidemie-de-covid-19/',
-      {responseType: 'text'});
-  }
-
   getCsvByUrl(url: string): Observable<any> {
     return this.http.get(`${url}`, {responseType: 'text'});
-  }
-
-  getCsvToPage(id: string): Observable<any> {
-    return this.http.get(`https://www.data.gouv.fr/fr/datasets/r/${id}`, {responseType: 'text'});
   }
 
   csvJSON(csv): any {
@@ -91,5 +82,9 @@ export class HospitaliseService {
 
   getAllHospData(): Observable<any> {
     return this.http.get('https://ec2-13-38-104-219.eu-west-3.compute.amazonaws.com/data/live/france/all');
+  }
+
+  getdataHospByTypeAndSexeAndDepartement(type, sex, departement): Observable<any> {
+    return this.http.get(`https://ec2-13-38-104-219.eu-west-3.compute.amazonaws.com/data/${type}/${sex}/${departement}`);
   }
 }
