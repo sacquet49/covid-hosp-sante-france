@@ -1,7 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {MenuItem, PrimeNGConfig} from 'primeng/api';
 import {Location} from '@angular/common';
-import {HospitaliseService} from './services/hospitalise.service';
 
 @Component({
   selector: 'app-root',
@@ -16,13 +15,8 @@ export class AppComponent implements OnInit {
     {label: 'Courbe hospitaliser courant', icon: 'pi pi-chart-line', routerLink: ['courant']},
   ];
   currantItem;
-  csvIsInit = false;
 
-  constructor(private location: Location, private newsService: HospitaliseService,
-              private config: PrimeNGConfig) {
-    this.newsService.getCsv().subscribe(csv => {
-      this.csvIsInit = csv[7].data.length > 0;
-    });
+  constructor(private location: Location, private config: PrimeNGConfig) {
   }
 
   ngOnInit(): void {

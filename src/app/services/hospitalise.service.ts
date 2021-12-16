@@ -6,8 +6,6 @@ import {EventEmitter} from 'events';
 @Injectable()
 export class HospitaliseService {
 
-  private subjectCsvHospitalisation = new Subject<any>();
-
   csv = [
     {nom: 'covid-hosp-txad-age-fra', id: '', data: []},
     {nom: 'covid-hosp-txad-reg', id: '', data: []},
@@ -24,44 +22,6 @@ export class HospitaliseService {
   isInit = new EventEmitter<number>();
 
   constructor(private http: HttpClient) {
-    this.initDataPage();
-  }
-
-  initDataPage(): void {
-    this.getAllCsv().subscribe(csvData => {
-      const jsonDataFilter: any[] = csvData.data.filter(j => !j.title.includes('metadonnees'));
-      for (let i = 7; i < 8; i++) {
-        // @ts-ignore
-        this.csv[i].id = jsonDataFilter[i].id;
-        this.getCsvByUrl(jsonDataFilter[i].latest).subscribe(dataCsv => {
-          this.csv[i].data = this.csvJSON(dataCsv);
-          this.subjectCsvHospitalisation.next(this.csv);
-        });
-      }
-    });
-  }
-
-  getCsvByUrl(url: string): Observable<any> {
-    return this.http.get(`${url}`, {responseType: 'text'});
-  }
-
-  csvJSON(csv): any {
-    const lines = csv.split('\n');
-    const result = [];
-    const headers = lines[0].split(';');
-    for (let i = 1; i < lines.length; i++) {
-      const obj = {};
-      const currentline = lines[i].split(';');
-      for (let j = 0; j < headers.length; j++) {
-        obj[headers[j].replace(/"/g, '')?.trim()] = currentline[j]?.replace(/"/g, '').replace(/\r/g, '');
-      }
-      result.push(obj);
-    }
-    return result;
-  }
-
-  getCsv(): Observable<any> {
-    return this.subjectCsvHospitalisation.asObservable();
   }
 
   reduceAdd(array: Array<any>): any {
@@ -74,10 +34,6 @@ export class HospitaliseService {
     precision = precision || 2;
     const tmp = Math.pow(10, precision);
     return Math.round(nombre * tmp) / tmp;
-  }
-
-  getAllCsv(): Observable<any> {
-    return this.http.get('https://www.data.gouv.fr/api/2/datasets/5e7e104ace2080d9162b61d8/resources/');
   }
 
   getdataHospByTypeAndSexeAndDepartement(type, sex, departement): Observable<any> {
@@ -98,5 +54,13 @@ export class HospitaliseService {
 
   labelsDayByDate(dateMin, dateMax): Observable<any> {
     return this.http.get(`https://ec2-13-38-104-219.eu-west-3.compute.amazonaws.com/data/labelsDay/ByDate/${dateMin}/${dateMax}`);
+  }
+
+  getHospitaliseTrancheAgeByDate(filtre, date): Observable<any> {
+    return this.http.get(`https://ec2-13-38-104-219.eu-west-3.compute.amazonaws.com/data/hospitalise/${filtre}/trancheAge/byDate/${date}`);
+  }
+
+  getHospitaliseVariationTrancheAgeByDate(filtre, dateMin, dateMax): Observable<any> {
+    return this.http.get(`https://ec2-13-38-104-219.eu-west-3.compute.amazonaws.com/data/hospitalise/variation/${filtre}/trancheAge/byDate/${dateMin}/${dateMax}`);
   }
 }
