@@ -21,7 +21,7 @@ export class AppComponent implements OnInit {
   constructor(private location: Location, private newsService: HospitaliseService,
               private config: PrimeNGConfig) {
     this.newsService.getCsv().subscribe(csv => {
-      this.csvIsInit = csv[3].data.length > 0;
+      this.csvIsInit = csv[7].data.length > 0;
     });
   }
 

@@ -32,8 +32,6 @@ export class CourbeHospCourantComponent implements AfterViewInit {
   chartHospEcartType: UIChart;
   @ViewChild('departement')
   departement: Dropdown;
-  hospitaliseParJour = [];
-  decesParJour = [];
   data = {
     labels: [],
     datasets: []
@@ -59,21 +57,18 @@ export class CourbeHospCourantComponent implements AfterViewInit {
   }
 
   init(): void {
-    if (this.hospService.csv[5].data.length > 0 && this.hospitaliseParJour.length === 0) {
-      this.hospitaliseParJour = this.hospService.csv[5].data.reduce((r, v, i, a, k = v.jour) => ((r[k] || (r[k] = []))
-        .push(v), r), {});
-      this.data.labels = Object.entries(this.hospitaliseParJour).map(hospJour => hospJour['0']);
-      this.updateChart('#0f29ae', this.LABEL_HOSPITALISATION, 'hosp', this.ENUM_SEX.TOUS);
-      this.updateChart('#e00101', this.LABEL_REANIMATION, 'rea', this.ENUM_SEX.TOUS);
-    }
-    if (this.hospService.csv[6].data.length > 0 && this.decesParJour.length === 0) {
-      this.decesParJour = this.hospService.csv[6].data.reduce((r, v, i, a, k = v.jour) => ((r[k] || (r[k] = [])).push(v), r), {});
-      this.dataDece.labels = Object.entries(this.hospitaliseParJour).map(hospJour => hospJour['0']);
-      this.updateChartDece();
+    this.hospService.getLabelsDay()
+      .subscribe(labels => {
+        this.data.labels = labels;
+        this.updateChart('#0f29ae', this.LABEL_HOSPITALISATION, 'hosp', this.ENUM_SEX.TOUS);
+        this.updateChart('#e00101', this.LABEL_REANIMATION, 'rea', this.ENUM_SEX.TOUS);
 
-      this.dataHospEcartType.labels = Object.entries(this.hospitaliseParJour).map(hospJour => hospJour['0']);
-      this.updateChartHospEcartType();
-    }
+        this.dataDece.labels = labels;
+        this.updateChartDece();
+
+        this.dataHospEcartType.labels = labels;
+        this.updateChartHospEcartType();
+      });
   }
 
   refresh(): void {
@@ -87,22 +82,6 @@ export class CourbeHospCourantComponent implements AfterViewInit {
   }
 
   updateChart(couleur: any, label: any, filtre: any, sex: string): void {
-    /*let data = [];
-    if (typeof filtre === 'string') {
-        data = this.gethospitaliseByFilter(filtre, sex);
-    } else {
-        filtre?.forEach((f, i) => {
-            if (i === 0) {
-                data = this.gethospitaliseByFilter(f, sex);
-            } else {
-                // tslint:disable-next-line:no-shadowed-variable
-                this.gethospitaliseByFilter(f, sex)?.forEach((d, i: number) => {
-                    // tslint:disable-next-line:radix
-                    data[i] = parseInt(data[i]) + parseInt(d);
-                });
-            }
-        });
-    }*/
     this.hospService.getdataHospByTypeAndSexeAndDepartement(filtre, sex, this.departementSelected)
       .subscribe(data => {
         this.data.datasets.push({
@@ -115,41 +94,22 @@ export class CourbeHospCourantComponent implements AfterViewInit {
       });
   }
 
-  gethospitaliseByFilter(filtre: string, sex: string): any[] {
-    if (this.departementSelected) {
-      return Object.entries(this.hospitaliseParJour).map(hospJour => hospJour['1']
-        .filter((ha: any) => ha.dep === this.departementSelected)
-        .reduce((r, v, i, a, k = v.sexe) => ((r[k] || (r[k] = [])).push(v[filtre]) , r), {})[sex])
-        .map(ha => this.hospService.reduceAdd(ha));
-    } else {
-      return Object.entries(this.hospitaliseParJour).map(hospJour => hospJour['1']
-        .reduce((r, v, i, a, k = v.sexe) => ((r[k] || (r[k] = [])).push(v[filtre]) , r), {})[sex])
-        .map(ha => this.hospService.reduceAdd(ha));
-    }
-  }
-
   updateChartDece(): void {
-    const data = this.getDecesByDay();
-    this.dataDece.datasets.push({
-      label: `Nombre quotidien de personnes nouvellement décédées`,
-      fill: false,
-      borderColor: '#1c9903',
-      data
+    this.hospService.getDecesByDay().subscribe(data => {
+      this.dataDece.datasets.push({
+        label: `Nombre quotidien de personnes nouvellement décédées`,
+        fill: false,
+        borderColor: '#1c9903',
+        data
+      });
+      this.chartDece.refresh();
+      this.chartDece.refresh();
     });
-    this.chartDece.refresh();
-    this.chartDece.refresh();
-  }
-
-  getDecesByDay(): any[] {
-    return Object.entries(this.decesParJour).map(hospJour => hospJour['1']
-      .reduce((r, v, i, a, k = v.jour) => ((r[k] || (r[k] = [])).push(v.incid_dc) , r), {}))
-      .map(j => this.hospService.reduceAdd(Object.values(j)['0']));
   }
 
   updateChartHospEcartType(): void {
     this.hospService.getdataHospByTypeAndSexeAndDepartement('hosp', this.ENUM_SEX.TOUS, this.departementSelected)
       .subscribe(data => {
-        // const data = this.gethospitaliseByFilter('hosp', this.ENUM_SEX.TOUS);
         let dataStd = data.map((v, i) => data[i + 1] && v ? math.std(v, data[i + 1]) : undefined);
         dataStd = dataStd.map((v, i) => dataStd[i + 1] && v ? (v + dataStd[i + 1]) / 2 : undefined);
         this.dataHospEcartType.datasets.push({
@@ -160,14 +120,15 @@ export class CourbeHospCourantComponent implements AfterViewInit {
         });
         this.chartHospEcartType.refresh();
 
-        const dataDece = this.getDecesByDay();
-        this.dataHospEcartType.datasets.push({
-          label: `Nombre quotidien de personnes nouvellement décédées`,
-          fill: false,
-          borderColor: '#990303',
-          data: dataDece
+        this.hospService.getDecesByDay().subscribe(dataDece => {
+          this.dataHospEcartType.datasets.push({
+            label: `Nombre quotidien de personnes nouvellement décédées`,
+            fill: false,
+            borderColor: '#990303',
+            data: dataDece
+          });
+          this.chartHospEcartType.refresh();
         });
-        this.chartHospEcartType.refresh();
       });
   }
 }

@@ -30,7 +30,7 @@ export class HospitaliseService {
   initDataPage(): void {
     this.getAllCsv().subscribe(csvData => {
       const jsonDataFilter: any[] = csvData.data.filter(j => !j.title.includes('metadonnees'));
-      for (let i = 0; i < 9; i++) {
+      for (let i = 7; i < 8; i++) {
         // @ts-ignore
         this.csv[i].id = jsonDataFilter[i].id;
         this.getCsvByUrl(jsonDataFilter[i].latest).subscribe(dataCsv => {
@@ -80,11 +80,15 @@ export class HospitaliseService {
     return this.http.get('https://www.data.gouv.fr/api/2/datasets/5e7e104ace2080d9162b61d8/resources/');
   }
 
-  getAllHospData(): Observable<any> {
-    return this.http.get('https://ec2-13-38-104-219.eu-west-3.compute.amazonaws.com/data/live/france/all');
-  }
-
   getdataHospByTypeAndSexeAndDepartement(type, sex, departement): Observable<any> {
     return this.http.get(`https://ec2-13-38-104-219.eu-west-3.compute.amazonaws.com/data/${type}/${sex}/${departement}`);
+  }
+
+  getDecesByDay(): Observable<any> {
+    return this.http.get(`https://ec2-13-38-104-219.eu-west-3.compute.amazonaws.com/data/decesByDay`);
+  }
+
+  getLabelsDay(): Observable<any> {
+    return this.http.get(`https://ec2-13-38-104-219.eu-west-3.compute.amazonaws.com/data/labelsDay`);
   }
 }
