@@ -91,4 +91,12 @@ export class HospitaliseService {
   getLabelsDay(): Observable<any> {
     return this.http.get(`https://ec2-13-38-104-219.eu-west-3.compute.amazonaws.com/data/labelsDay`);
   }
+
+  getdataAgeByTypeAndDateAndRegion(type, dateMin, dateMax, region): Observable<any> {
+    return this.http.get(`https://ec2-13-38-104-219.eu-west-3.compute.amazonaws.com/data/trancheAge/${type}/${dateMin}/${dateMax}/${region}`);
+  }
+
+  labelsDayByDate(dateMin, dateMax): Observable<any> {
+    return this.http.get(`https://ec2-13-38-104-219.eu-west-3.compute.amazonaws.com/data/labelsDay/ByDate/${dateMin}/${dateMax}`);
+  }
 }

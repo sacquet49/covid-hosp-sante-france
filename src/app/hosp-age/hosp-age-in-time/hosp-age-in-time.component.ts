@@ -21,10 +21,6 @@ export class HospAgeInTimeComponent implements OnInit {
     datasets: []
   };
   @Input()
-  hospitaliseParJour;
-  @Input()
-  label;
-  @Input()
   minDate;
   @Input()
   maxDate;
@@ -34,17 +30,6 @@ export class HospAgeInTimeComponent implements OnInit {
   regionSelected: string;
   regionsDrop: SelectItem[];
   proportionEvoAge = false;
-  hospitaliseParTrancheAge = [];
-  trancheAge = [{indice: '09', label: '0 - 9', color: '#0050ff'},
-    {indice: '19', label: '10 - 19', color: '#ff00e5'},
-    {indice: '29', label: '20 - 29', color: '#00f7ff'},
-    {indice: '39', label: '30 - 39', color: '#6aff00'},
-    {indice: '49', label: '40 - 49', color: '#ff0000'},
-    {indice: '59', label: '50 - 59', color: '#ff7700'},
-    {indice: '69', label: '60 - 69', color: '#9500ff'},
-    {indice: '79', label: '70 - 79', color: '#d0ff00'},
-    {indice: '89', label: '80 - 89', color: '#0b0b18'},
-    {indice: '90', label: '>90', color: '#02a705'}];
   TYPE_STAT = {
     HOSP: 'hosp',
     REA: 'rea',
@@ -64,66 +49,40 @@ export class HospAgeInTimeComponent implements OnInit {
   }
 
   init(): void {
-    if (this.hospService.csv[7].data.length > 0) {
-      this.hospitaliseParTrancheAge = this.hospService.csv[7].data.reduce((r, v, i, a, k = v.cl_age90) => ((r[k] || (r[k] = [])).push(v), r), {});
-      this.getEvolutionParTrancheAge();
-    }
+    this.getEvolutionParTrancheAge();
   }
 
   getEvolutionParTrancheAge(): void {
-    this.dataEvolution.labels = Object.entries(this.hospitaliseParJour).map(hospJour => hospJour['0'])
-      .filter((ha: any) => (this.joursSelected.length === 2) ? (ha >= this.joursSelected[0] && ha <= this.joursSelected[1]) : true);
-    if (!this.regionSelected) {
-      this.region.resetFilter();
-    }
-    const evolutionByAge = [];
-    if (this.chartEvolution) {
-      this.chartEvolution.reinit();
-      this.chartEvolution.refresh();
-    }
-    this.dataEvolution.datasets = [];
-    this.trancheAge.forEach(t => {
-      evolutionByAge[t.indice] = this.getHospitaliseByAge(t.indice);
-    });
+    this.hospService.labelsDayByDate(this.joursSelected[0], this.joursSelected[1])
+      .subscribe(dataLabels => {
+        this.dataEvolution.labels = dataLabels;
+        if (!this.regionSelected) {
+          this.region.resetFilter();
+        }
+        if (this.chartEvolution) {
+          this.chartEvolution.reinit();
+          this.chartEvolution.refresh();
+        }
+        this.dataEvolution.datasets = [];
 
-    for (let i = 0; i < evolutionByAge['09'].length; i++) {
-      const total = this.hospService.reduceAdd(evolutionByAge.map(t => t[i]));
-      this.trancheAge.forEach(t => {
-        evolutionByAge[t.indice][i] = this.hospService.roundDecimal((evolutionByAge[t.indice][i] * 100) / total, 2);
+        this.hospService.getdataAgeByTypeAndDateAndRegion(this.typeStatSelected, this.joursSelected[0], this.joursSelected[1], this.regionSelected)
+          .subscribe(data => {
+            this.printValueOnGraph(data);
+          });
       });
-    }
-
-    this.printValueOnGraph(evolutionByAge);
   }
 
   private printValueOnGraph(evolutionByAge: any[]): void {
-    this.trancheAge.forEach(t => {
+    evolutionByAge.forEach(t => {
       this.dataEvolution.datasets.push({
         label: `${t.label}`,
         fill: false,
         borderColor: t.color,
-        data: this.proportionEvoAge ? evolutionByAge[t.indice] : this.getHospitaliseByAge(t.indice)
+        data: this.proportionEvoAge ? t.dataP : t.data
       });
       this.chartEvolution.refresh();
       this.chartEvolution.refresh();
     });
-  }
-
-  getHospitaliseByAge(trancheAge: string): any[] {
-    const hospitalise = [];
-    Object.entries(this.hospitaliseParTrancheAge[trancheAge]
-      .filter((ha: any) => {
-        if (this.joursSelected.length === 2) {
-          return (ha.jour >= this.joursSelected[0] && new Date(ha.jour) <= this.addDays(this.joursSelected[1], 1)) && (this.regionSelected ? ha.reg === this.regionSelected : true);
-        } else if (this.regionSelected) {
-          return ha.reg === this.regionSelected;
-        } else {
-          return true;
-        }
-      })
-      .reduce((r, v, i, a, k = v.jour) => ((r[k] || (r[k] = [])).push(v[this.typeStatSelected]) , r), {}))
-      .map((ha: any) => hospitalise.push(this.hospService.reduceAdd(ha['1'])));
-    return hospitalise.slice(1);
   }
 
   refreshVariation(): void {
@@ -138,11 +97,5 @@ export class HospAgeInTimeComponent implements OnInit {
       this.joursSelected = [];
       this.getEvolutionParTrancheAge();
     }
-  }
-
-  addDays(date, days): Date {
-    const result = new Date(date);
-    result.setDate(result.getDate() + days);
-    return result;
   }
 }
