@@ -1,15 +1,22 @@
 import {Injectable, Output} from '@angular/core';
-import {HttpClient, HttpHeaders} from '@angular/common/http';
-import {Observable} from 'rxjs';
+import {HttpClient} from '@angular/common/http';
+import {Observable, Subject} from 'rxjs';
 import {EventEmitter} from 'events';
 
 @Injectable()
 export class HospitaliseService {
 
-  header_node = {
-    Accept: 'application/json',
-    rejectUnauthorized: 'false',
-  };
+  csv = [
+    {nom: 'covid-hosp-txad-age-fra', id: '', data: []},
+    {nom: 'covid-hosp-txad-reg', id: '', data: []},
+    {nom: 'covid-hosp-txad-fra', id: '', data: []},
+    {nom: 'donnees-hospitalieres-classe-age-hebdo-covid19', id: '', data: []},
+    {nom: 'covid-hospit-incid-reg', id: '', data: []},
+    {nom: 'donnees-hospitalieres-covid19', id: '', data: []},
+    {nom: 'donnees-hospitalieres-nouveaux-covid19', id: '', data: []},
+    {nom: 'donnees-hospitalieres-classe-age-covid19', id: '', data: []},
+    {nom: 'donnees-hospitalieres-etablissements-covid19', id: '', data: []}
+  ];
 
   @Output()
   isInit = new EventEmitter<number>();
@@ -30,30 +37,30 @@ export class HospitaliseService {
   }
 
   getdataHospByTypeAndSexeAndDepartement(type, sex, departement): Observable<any> {
-    return this.http.get(`https://ec2-13-38-104-219.eu-west-3.compute.amazonaws.com/data/${type}/${sex}/${departement}`,{headers: this.header_node});
+    return this.http.get(`https://ec2-13-38-104-219.eu-west-3.compute.amazonaws.com/data/${type}/${sex}/${departement}`);
   }
 
   getDecesByDay(): Observable<any> {
-    return this.http.get(`https://ec2-13-38-104-219.eu-west-3.compute.amazonaws.com/data/decesByDay`, {headers: this.header_node});
+    return this.http.get(`https://ec2-13-38-104-219.eu-west-3.compute.amazonaws.com/data/decesByDay`);
   }
 
   getLabelsDay(): Observable<any> {
-    return this.http.get(`https://ec2-13-38-104-219.eu-west-3.compute.amazonaws.com/data/labelsDay`, {headers: this.header_node});
+    return this.http.get(`https://ec2-13-38-104-219.eu-west-3.compute.amazonaws.com/data/labelsDay`);
   }
 
   getdataAgeByTypeAndDateAndRegion(type, dateMin, dateMax, region): Observable<any> {
-    return this.http.get(`https://ec2-13-38-104-219.eu-west-3.compute.amazonaws.com/data/trancheAge/${type}/${dateMin}/${dateMax}/${region}`,{headers: this.header_node});
+    return this.http.get(`https://ec2-13-38-104-219.eu-west-3.compute.amazonaws.com/data/trancheAge/${type}/${dateMin}/${dateMax}/${region}`);
   }
 
   labelsDayByDate(dateMin, dateMax): Observable<any> {
-    return this.http.get(`https://ec2-13-38-104-219.eu-west-3.compute.amazonaws.com/data/labelsDay/ByDate/${dateMin}/${dateMax}`, {headers: this.header_node});
+    return this.http.get(`https://ec2-13-38-104-219.eu-west-3.compute.amazonaws.com/data/labelsDay/ByDate/${dateMin}/${dateMax}`);
   }
 
   getHospitaliseTrancheAgeByDate(filtre, date): Observable<any> {
-    return this.http.get(`https://ec2-13-38-104-219.eu-west-3.compute.amazonaws.com/data/hospitalise/${filtre}/trancheAge/byDate/${date}`, {headers: this.header_node});
+    return this.http.get(`https://ec2-13-38-104-219.eu-west-3.compute.amazonaws.com/data/hospitalise/${filtre}/trancheAge/byDate/${date}`);
   }
 
   getHospitaliseVariationTrancheAgeByDate(filtre, dateMin, dateMax): Observable<any> {
-    return this.http.get(`https://ec2-13-38-104-219.eu-west-3.compute.amazonaws.com/data/hospitalise/variation/${filtre}/trancheAge/byDate/${dateMin}/${dateMax}`, {headers: this.header_node});
+    return this.http.get(`https://ec2-13-38-104-219.eu-west-3.compute.amazonaws.com/data/hospitalise/variation/${filtre}/trancheAge/byDate/${dateMin}/${dateMax}`);
   }
 }
