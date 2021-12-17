@@ -49,6 +49,12 @@ export class HospAgeInTimeComponent implements OnInit {
   }
 
   init(): void {
+    const today = new Date();
+    this.joursSelected.push(moment(today).add(-365, 'day').format('YYYY-MM-DD'));
+    this.joursSelected.push(moment(today).format('YYYY-MM-DD'));
+    this.jours = new Array();
+    this.jours[0] = moment(today).add(-365, 'day').toDate();
+    this.jours[1] = today;
     this.getEvolutionParTrancheAge();
   }
 
