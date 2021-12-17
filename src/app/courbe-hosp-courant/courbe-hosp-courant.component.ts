@@ -103,7 +103,6 @@ export class CourbeHospCourantComponent implements AfterViewInit {
         data
       });
       this.chartDece.refresh();
-      this.chartDece.refresh();
     });
   }
 
@@ -118,8 +117,6 @@ export class CourbeHospCourantComponent implements AfterViewInit {
           borderColor: '#022179',
           data: dataStd
         });
-        this.chartHospEcartType.refresh();
-
         this.hospService.getDecesByDay().subscribe(dataDece => {
           this.dataHospEcartType.datasets.push({
             label: `Nombre quotidien de personnes nouvellement décédées`,

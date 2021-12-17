@@ -86,9 +86,8 @@ export class HospAgeInTimeComponent implements OnInit {
         borderColor: t.color,
         data: this.proportionEvoAge ? t.dataP : t.data
       });
-      this.chartEvolution.refresh();
-      this.chartEvolution.refresh();
     });
+    this.chartEvolution.refresh();
   }
 
   refreshVariation(): void {
