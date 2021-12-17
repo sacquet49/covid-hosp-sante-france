@@ -37,30 +37,30 @@ export class HospitaliseService {
   }
 
   getdataHospByTypeAndSexeAndDepartement(type, sex, departement): Observable<any> {
-    return this.http.get(`https://ec2-13-38-104-219.eu-west-3.compute.amazonaws.com/data/${type}/${sex}/${departement}`);
+    return this.http.get(`https://www.sacquet-covid.link/data/${type}/${sex}/${departement}`);
   }
 
   getDecesByDay(): Observable<any> {
-    return this.http.get(`https://ec2-13-38-104-219.eu-west-3.compute.amazonaws.com/data/decesByDay`);
+    return this.http.get(`https://www.sacquet-covid.link/data/decesByDay`);
   }
 
   getLabelsDay(): Observable<any> {
-    return this.http.get(`https://ec2-13-38-104-219.eu-west-3.compute.amazonaws.com/data/labelsDay`);
+    return this.http.get(`https://www.sacquet-covid.link/data/labelsDay`);
   }
 
   getdataAgeByTypeAndDateAndRegion(type, dateMin, dateMax, region): Observable<any> {
-    return this.http.get(`https://ec2-13-38-104-219.eu-west-3.compute.amazonaws.com/data/trancheAge/${type}/${dateMin}/${dateMax}/${region}`);
+    return this.http.get(`https://www.sacquet-covid.link/data/trancheAge/${type}/${dateMin}/${dateMax}/${region}`);
   }
 
   labelsDayByDate(dateMin, dateMax): Observable<any> {
-    return this.http.get(`https://ec2-13-38-104-219.eu-west-3.compute.amazonaws.com/data/labelsDay/ByDate/${dateMin}/${dateMax}`);
+    return this.http.get(`https://www.sacquet-covid.link/data/labelsDay/ByDate/${dateMin}/${dateMax}`);
   }
 
   getHospitaliseTrancheAgeByDate(filtre, date): Observable<any> {
-    return this.http.get(`https://ec2-13-38-104-219.eu-west-3.compute.amazonaws.com/data/hospitalise/${filtre}/trancheAge/byDate/${date}`);
+    return this.http.get(`https://www.sacquet-covid.link/data/hospitalise/${filtre}/trancheAge/byDate/${date}`);
   }
 
   getHospitaliseVariationTrancheAgeByDate(filtre, dateMin, dateMax): Observable<any> {
-    return this.http.get(`https://ec2-13-38-104-219.eu-west-3.compute.amazonaws.com/data/hospitalise/variation/${filtre}/trancheAge/byDate/${dateMin}/${dateMax}`);
+    return this.http.get(`https://www.sacquet-covid.link/data/hospitalise/variation/${filtre}/trancheAge/byDate/${dateMin}/${dateMax}`);
   }
 }
