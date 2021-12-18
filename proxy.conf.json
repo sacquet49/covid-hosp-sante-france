@@ -1,8 +1,0 @@
-{
-  "/data/*": {
-    "target": "https://www.sacquet-covid.link",
-    "secure": true,
-    "logLevel": "error",
-    "changeOrigin": true
-  }
-}

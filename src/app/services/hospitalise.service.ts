@@ -2,6 +2,7 @@ import {Injectable, Output} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {Observable, Subject} from 'rxjs';
 import {EventEmitter} from 'events';
+import {environment} from '../../environments/environment';
 
 @Injectable()
 export class HospitaliseService {
@@ -37,34 +38,34 @@ export class HospitaliseService {
   }
 
   getdataHospByTypeAndSexeAndDepartement(type, sex, departement): Observable<any> {
-    return this.http.get(`/data/${type}/${sex}/${departement}`);
+    return this.http.get(`${environment.urlWs}/data/${type}/${sex}/${departement}`);
   }
 
   getDecesByDay(): Observable<any> {
-    return this.http.get(`/data/decesByDay`);
+    return this.http.get(`${environment.urlWs}/data/decesByDay`);
   }
 
   getLabelsDay(): Observable<any> {
-    return this.http.get(`/data/labelsDay`);
+    return this.http.get(`${environment.urlWs}/data/labelsDay`);
   }
 
   getdataAgeByTypeAndDateAndRegion(type, dateMin, dateMax, region): Observable<any> {
-    return this.http.get(`/data/trancheAge/${type}/${dateMin}/${dateMax}/${region}`);
+    return this.http.get(`${environment.urlWs}/data/trancheAge/${type}/${dateMin}/${dateMax}/${region}`);
   }
 
   labelsDayByDate(dateMin, dateMax): Observable<any> {
-    return this.http.get(`/data/labelsDay/ByDate/${dateMin}/${dateMax}`);
+    return this.http.get(`${environment.urlWs}/data/labelsDay/ByDate/${dateMin}/${dateMax}`);
   }
 
   getHospitaliseTrancheAgeByDate(filtre, date): Observable<any> {
-    return this.http.get(`/data/hospitalise/${filtre}/trancheAge/byDate/${date}`);
+    return this.http.get(`${environment.urlWs}/data/hospitalise/${filtre}/trancheAge/byDate/${date}`);
   }
 
   getHospitaliseVariationTrancheAgeByDate(filtre, dateMin, dateMax): Observable<any> {
-    return this.http.get(`/data/hospitalise/variation/${filtre}/trancheAge/byDate/${dateMin}/${dateMax}`);
+    return this.http.get(`${environment.urlWs}/data/hospitalise/variation/${filtre}/trancheAge/byDate/${dateMin}/${dateMax}`);
   }
 
   getDataByTypeAndSexAndDepartementAndDate(filtre, sex, departement, dateMin, dateMax): Observable<any> {
-    return this.http.get(`/data/hospCourant/byDate/${filtre}/${sex}/${departement}/${dateMin}/${dateMax}`);
+    return this.http.get(`${environment.urlWs}/data/hospCourant/byDate/${filtre}/${sex}/${departement}/${dateMin}/${dateMax}`);
   }
 }
