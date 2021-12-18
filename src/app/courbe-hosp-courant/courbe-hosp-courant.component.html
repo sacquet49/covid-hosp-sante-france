@@ -33,6 +33,16 @@
     </div>
   </div>
 
+  <div class="p-fluid p-grid p-formgrid p-mb-2">
+    <div class="p-field p-col-12 p-md-3">
+      <p-calendar [(ngModel)]="jours" [minDate]="minDate" [maxDate]="maxDate"
+                  [readonlyInput]="true" inputId="min-max3"
+                  dateFormat="dd/mm/yy" selectionMode="range"
+                  placeholder="Choix d'un interval de date" showButtonBar="true"
+                  (onClose)="refresh()"></p-calendar>
+    </div>
+  </div>
+
   <div class="p-grid p-mt-4 mb-5">
     <p-chart #chart type="line" [data]="data" height="570" class="w-100"></p-chart>
   </div>

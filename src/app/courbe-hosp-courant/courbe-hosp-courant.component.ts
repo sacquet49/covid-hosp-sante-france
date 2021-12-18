@@ -5,6 +5,7 @@ import {AdresseService} from '../services/adresse.service';
 import {SelectItem} from 'primeng/api';
 import * as math from 'mathjs';
 import {Dropdown} from 'primeng/dropdown';
+import * as moment from 'moment';
 
 @Component({
   selector: 'courbe-hosp-courant',
@@ -20,6 +21,10 @@ export class CourbeHospCourantComponent implements AfterViewInit {
   };
   sexSelected = this.ENUM_SEX.TOUS;
   departements: any = [];
+  jours;
+  minDate;
+  maxDate;
+  joursSelected = [];
   departementSelected: string;
   departementsDrop: SelectItem[];
   LABEL_HOSPITALISATION = `Patients covid hospitaliser (comprend les réanimations)`;
@@ -57,12 +62,11 @@ export class CourbeHospCourantComponent implements AfterViewInit {
   }
 
   init(): void {
+    this.initDateForSelector();
+    this.updateChart('#0f29ae', this.LABEL_HOSPITALISATION, 'hosp', this.ENUM_SEX.TOUS);
+    this.updateChart('#e00101', this.LABEL_REANIMATION, 'rea', this.ENUM_SEX.TOUS);
     this.hospService.getLabelsDay()
       .subscribe(labels => {
-        this.data.labels = labels;
-        this.updateChart('#0f29ae', this.LABEL_HOSPITALISATION, 'hosp', this.ENUM_SEX.TOUS);
-        this.updateChart('#e00101', this.LABEL_REANIMATION, 'rea', this.ENUM_SEX.TOUS);
-
         this.dataDece.labels = labels;
         this.updateChartDece();
 
@@ -71,7 +75,34 @@ export class CourbeHospCourantComponent implements AfterViewInit {
       });
   }
 
+  private initDateForSelector(): void {
+    const today = new Date();
+    this.joursSelected.push(moment(today).add(-365, 'day').format('YYYY-MM-DD'));
+    this.joursSelected.push(moment(today).format('YYYY-MM-DD'));
+    this.minDate = new Date();
+    this.minDate.setDate(18);
+    this.minDate.setMonth(2);
+    this.minDate.setFullYear(2020);
+    this.maxDate = moment(new Date(), 'YYYY-MM-DD').add(-1, 'day').toDate();
+    this.jours = new Array();
+    this.jours[0] = moment(today).add(-365, 'day').toDate();
+    this.jours[1] = today;
+  }
+
+  private selectedDate(): void {
+    if (this.jours && this.jours[1]) {
+      this.joursSelected = [];
+      const jourMin = this.jours[0] && !this.jours[1] ? this.jours[0] : (this.jours[0] < this.jours[1] ? this.jours[0] : this.jours[1]);
+      const jourMax = this.jours[0] && this.jours[1] && this.jours[0] > this.jours[1] ? this.jours[0] : this.jours[1];
+      this.joursSelected.push(moment(jourMin).format('YYYY-MM-DD'));
+      this.joursSelected.push(moment(jourMax).format('YYYY-MM-DD'));
+    } else if (this.joursSelected.length === 2) {
+      this.joursSelected = [];
+    }
+  }
+
   refresh(): void {
+    this.selectedDate();
     if (!this.departementSelected) {
       this.departement.resetFilter();
     }
@@ -82,15 +113,19 @@ export class CourbeHospCourantComponent implements AfterViewInit {
   }
 
   updateChart(couleur: any, label: any, filtre: any, sex: string): void {
-    this.hospService.getdataHospByTypeAndSexeAndDepartement(filtre, sex, this.departementSelected)
-      .subscribe(data => {
-        this.data.datasets.push({
-          label: `${label}`,
-          fill: false,
-          borderColor: couleur,
-          data
-        });
-        this.chart.refresh();
+    this.hospService.labelsDayByDate(this.joursSelected[0], this.joursSelected[1])
+      .subscribe(dataLabels => {
+        this.data.labels = dataLabels;
+        this.hospService.getDataByTypeAndSexAndDepartementAndDate(filtre, sex, this.departementSelected, this.joursSelected[0], this.joursSelected[1])
+          .subscribe(data => {
+            this.data.datasets.push({
+              label: `${label}`,
+              fill: false,
+              borderColor: couleur,
+              data
+            });
+            this.chart.refresh();
+          });
       });
   }
 

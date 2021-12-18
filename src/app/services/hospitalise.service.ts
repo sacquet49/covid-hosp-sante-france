@@ -63,4 +63,8 @@ export class HospitaliseService {
   getHospitaliseVariationTrancheAgeByDate(filtre, dateMin, dateMax): Observable<any> {
     return this.http.get(`https://www.sacquet-covid.link/data/hospitalise/variation/${filtre}/trancheAge/byDate/${dateMin}/${dateMax}`);
   }
+
+  getDataByTypeAndSexAndDepartementAndDate(filtre, sex, departement, dateMin, dateMax): Observable<any> {
+    return this.http.get(`https://www.sacquet-covid.link/data/hospCourant/byDate/${filtre}/${sex}/${departement}/${dateMin}/${dateMax}`);
+  }
 }
