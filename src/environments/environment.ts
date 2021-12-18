@@ -4,7 +4,7 @@
 
 export const environment = {
   production: false,
-  urlWs: 'https://www.sacquet-covid.link'
+  urlWs: 'localhost:3000'
 };
 
 /*
