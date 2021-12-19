@@ -1,6 +1,6 @@
 import {Injectable, Output} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import {Observable, Subject} from 'rxjs';
+import {Observable} from 'rxjs';
 import {EventEmitter} from 'events';
 import {environment} from '../../environments/environment';
 
@@ -67,5 +67,9 @@ export class HospitaliseService {
 
   getDataByTypeAndSexAndDepartementAndDate(filtre, sex, departement, dateMin, dateMax): Observable<any> {
     return this.http.get(`${environment.urlWs}/data/hospCourant/byDate/${filtre}/${sex}/${departement}/${dateMin}/${dateMax}`);
+  }
+
+  update(): Observable<any> {
+    return this.http.get(`${environment.urlWs}/data/update`);
   }
 }

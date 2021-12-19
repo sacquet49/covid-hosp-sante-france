@@ -1,6 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {MenuItem, PrimeNGConfig} from 'primeng/api';
 import {Location} from '@angular/common';
+import {HospitaliseService} from './services/hospitalise.service';
 
 @Component({
   selector: 'app-root',
@@ -16,10 +17,13 @@ export class AppComponent implements OnInit {
   ];
   currantItem;
 
-  constructor(private location: Location, private config: PrimeNGConfig) {
+  constructor(private location: Location,
+              private hospService: HospitaliseService,
+              private config: PrimeNGConfig) {
   }
 
   ngOnInit(): void {
+    this.hospService.update().subscribe();
     this.config.setTranslation({
       dayNames: ['Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi'],
       dayNamesShort: ['Dim', 'Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam'],
