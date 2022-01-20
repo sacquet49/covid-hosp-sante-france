@@ -3,17 +3,17 @@
 
   <div class="p-field-radiobutton p-grid p-formgrid p-mb-2">
     <div class="p-field-radiobutton p-col-12 p-md-3">
-      <p-radioButton name="sexe" [value]="ENUM_SEX.TOUS" [(ngModel)]="sexSelected"
+      <p-radioButton name="sexe" [value]="enumSex.TOUS" [(ngModel)]="sexSelected"
                      inputId="sexe1" (ngModelChange)="refresh()"></p-radioButton>
       <label for="sexe1">Homme et Femme</label>
     </div>
     <div class="p-field-radiobutton p-col-12 p-md-3">
-      <p-radioButton name="sexe" [value]="ENUM_SEX.HOMME" [(ngModel)]="sexSelected"
+      <p-radioButton name="sexe" [value]="enumSex.HOMME" [(ngModel)]="sexSelected"
                      inputId="sexe2" (ngModelChange)="refresh()"></p-radioButton>
       <label for="sexe2">Homme</label>
     </div>
     <div class="p-field-radiobutton p-col-12 p-md-3">
-      <p-radioButton name="sexe" [value]="ENUM_SEX.FEMME" [(ngModel)]="sexSelected"
+      <p-radioButton name="sexe" [value]="enumSex.FEMME" [(ngModel)]="sexSelected"
                      inputId="sexe3" (ngModelChange)="refresh()"></p-radioButton>
       <label for="sexe3">Femme</label>
     </div>

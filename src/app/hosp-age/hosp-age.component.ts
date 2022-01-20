@@ -2,6 +2,7 @@ import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
 import {HospitaliseService} from '../services/hospitalise.service';
 import * as moment from 'moment';
 import {UIChart} from 'primeng/chart';
+import {LABEL, LABEL_DECEDE, LABEL_HOSPITALISATION, LABEL_REANIMATION} from './hosp-age.model';
 
 @Component({
   selector: 'hosp-age',
@@ -10,135 +11,165 @@ import {UIChart} from 'primeng/chart';
 })
 export class HospAgeComponent implements AfterViewInit, OnInit {
 
-  LABEL_HOSPITALISATION = `Patients covid hospitalisés au `;
-  LABEL_REANIMATION = `Patients covid hospitalisés en réanimation au `;
-  LABEL_DECEDE = `Nombre cumulé de personnes décédées au `;
-  proportion = false;
-  proportionDece = false;
-  variation = false;
+  private _proportion = false;
+  private _proportionDece = false;
+  private _variation = false;
   @ViewChild('chart')
-  chart: UIChart;
+  private _chart: UIChart;
   @ViewChild('chartVariation')
-  chartVariation: UIChart;
+  private _chartVariation: UIChart;
   @ViewChild('chartDece')
-  chartDece: UIChart;
-  minDate;
-  maxDate;
-  jour;
-  jour2;
-  label = ['0 - 9', '10 - 19', '20 - 29', '30 - 39', '40 - 49', '50 - 59', '60 - 69', '70 - 79', '80 - 89', '>90'];
-  data = {
-    labels: this.label,
+  private _chartDece: UIChart;
+  private _minDate;
+  private _maxDate;
+  private _jour;
+  private _jour2;
+  private _data = {
+    labels: LABEL,
     datasets: []
   };
-  dataDece = {
-    labels: this.label,
+  private _dataDece = {
+    labels: LABEL,
     datasets: []
   };
-  variationData = {
-    labels: this.label,
+  private _variationData = {
+    labels: LABEL,
     datasets: []
   };
+
+  get proportionDece(): any {
+    return this._proportionDece;
+  }
+
+  set proportionDece(proportion) {
+    this._proportionDece = proportion;
+  }
+
+  get variation(): any {
+    return this._variation;
+  }
+
+  set variation(variation) {
+    this._variation = variation;
+  }
+
+  get proportion(): any {
+    return this._proportion;
+  }
+
+  set proportion(proportion) {
+    this._proportion = proportion;
+  }
+
+  get jour2(): any {
+    return this._jour2;
+  }
+
+  set jour2(jour2) {
+    this._jour2 = jour2;
+  }
+
+  get jour(): any {
+    return this._jour;
+  }
+
+  set jour(jour) {
+    this._jour = jour;
+  }
+
+  get minDate(): any {
+    return this._minDate;
+  }
+
+  get maxDate(): any {
+    return this._maxDate;
+  }
+
+  get variationData(): any {
+    return this._variationData;
+  }
+
+  get data(): any {
+    return this._data;
+  }
+  
+  get dataDece(): any {
+    return this._dataDece;
+  }
 
   constructor(private hospService: HospitaliseService) {
   }
 
-  ngOnInit(): void {
-    this.minDate = new Date();
-    this.minDate.setDate(18);
-    this.minDate.setMonth(2);
-    this.minDate.setFullYear(2020);
+  public ngOnInit(): void {
+    this._minDate = new Date();
+    this._minDate.setDate(18);
+    this._minDate.setMonth(2);
+    this._minDate.setFullYear(2020);
     setTimeout(() => this.init(), 50);
   }
 
-  ngAfterViewInit(): void {
+  public ngAfterViewInit(): void {
     setTimeout(() => this.refreshChart(), 50);
     setTimeout(() => this.updateChartDece(), 50);
   }
 
-  init(): void {
-    this.maxDate = moment(new Date(), 'YYYY-MM-DD').add(-1, 'day').toDate();
-    this.jour = this.jour ? this.jour : this.maxDate;
-  }
-
-  refreshChart(): void {
-    if (this.chart) {
-      this.chart.reinit();
-      this.chart.refresh();
+  public refreshChart(): void {
+    if (this._chart) {
+      this._chart.reinit();
+      this._chart.refresh();
     }
-    this.data.datasets = [];
+    this._data.datasets = [];
 
-    const jourMin = this.jour && !this.jour2 ? this.jour : (this.jour < this.jour2 ? this.jour : this.jour2);
-    const jourMax = this.jour && this.jour2 && this.jour > this.jour2 ? this.jour : this.jour2;
+    const jourMin = this._jour && !this._jour2 ? this._jour : (this._jour < this._jour2 ? this._jour : this._jour2);
+    const jourMax = this._jour && this._jour2 && this._jour > this._jour2 ? this._jour : this._jour2;
 
-    this.updateChart(jourMin, '#42A5F5', this.LABEL_HOSPITALISATION, 'hosp');
-    if (this.jour2) {
-      this.updateChart(jourMax, '#9CCC65', this.LABEL_HOSPITALISATION, 'hosp');
+    this.updateChart(jourMin, '#42A5F5', LABEL_HOSPITALISATION, 'hosp');
+    if (this._jour2) {
+      this.updateChart(jourMax, '#9CCC65', LABEL_HOSPITALISATION, 'hosp');
     }
 
-    this.updateChart(jourMin, '#eccd05', this.LABEL_REANIMATION, 'rea');
-    if (this.jour2) {
-      this.updateChart(jourMax, '#b80000', this.LABEL_REANIMATION, 'rea');
+    this.updateChart(jourMin, '#eccd05', LABEL_REANIMATION, 'rea');
+    if (this._jour2) {
+      this.updateChart(jourMax, '#b80000', LABEL_REANIMATION, 'rea');
     }
   }
 
-  updateChart(date: any, couleur: any, label: any, filtre: any): void {
-    const dateString = moment(date).format('YYYY-MM-DD');
-    const dateFr = moment(date).format('DD-MM-YYYY');
-    this.hospService.getHospitaliseTrancheAgeByDate(filtre, dateString)
-      .subscribe(data => {
-        if (this.proportion) {
-          const total = this.hospService.reduceAdd(data);
-          data = data.map(d => this.hospService.roundDecimal((d * 100) / total, 2));
-        }
-        this.data.datasets.push({
-          label: `${label} ${dateFr}`,
-          backgroundColor: couleur,
-          borderColor: couleur,
-          data
-        });
-        if (this.chart) {
-          this.chart.refresh();
-        }
-      });
-  }
-
-  updateChartDece(): void {
-    if (this.chartDece) {
-      this.chartDece.reinit();
-      this.chartDece.refresh();
+  public updateChartDece(): void {
+    if (this._chartDece) {
+      this._chartDece.reinit();
+      this._chartDece.refresh();
     }
-    this.dataDece.datasets = [];
-    const dateString = moment(this.maxDate).format('YYYY-MM-DD');
-    const dateFr = moment(this.maxDate).format('DD-MM-YYYY');
+    this._dataDece.datasets = [];
+    const dateString = moment(this._maxDate).format('YYYY-MM-DD');
+    const dateFr = moment(this._maxDate).format('DD-MM-YYYY');
     this.hospService.getHospitaliseTrancheAgeByDate('dc', dateString)
       .subscribe(data => {
         const total = this.hospService.reduceAdd(data);
-        if (this.proportionDece) {
+        if (this._proportionDece) {
           data = data.map(d => this.hospService.roundDecimal((d * 100) / total, 2));
         }
-        this.dataDece.datasets.push({
-          label: `${this.LABEL_DECEDE} ${dateFr} total : ${total}`,
+        this._dataDece.datasets.push({
+          label: `${LABEL_DECEDE} ${dateFr} total : ${total}`,
           backgroundColor: '#048d92',
           borderColor: '#048d92',
           data
         });
-        if (this.chartDece) {
-          this.chartDece.refresh();
+        if (this._chartDece) {
+          this._chartDece.refresh();
         }
       });
   }
 
-  refreshVariation(): void {
-    if (this.jour && this.jour2) {
-      if (this.chartVariation) {
-        this.chartVariation.reinit();
-        this.chartVariation.refresh();
+  public refreshVariation(): void {
+    if (this._jour && this._jour2) {
+      if (this._chartVariation) {
+        this._chartVariation.reinit();
+        this._chartVariation.refresh();
       }
-      this.variationData.datasets = [];
+      this._variationData.datasets = [];
 
-      const jourMin = this.jour && !this.jour2 ? this.jour : (this.jour < this.jour2 ? this.jour : this.jour2);
-      const jourMax = this.jour && this.jour2 && this.jour > this.jour2 ? this.jour : this.jour2;
+      const jourMin = this._jour && !this._jour2 ? this._jour : (this._jour < this._jour2 ? this._jour : this._jour2);
+      const jourMax = this._jour && this._jour2 && this._jour > this._jour2 ? this._jour : this._jour2;
       const dateString = moment(jourMin).format('YYYY-MM-DD');
       const dateString2 = moment(jourMax).format('YYYY-MM-DD');
       const dateFr = moment(jourMin).format('DD-MM-YYYY');
@@ -146,7 +177,7 @@ export class HospAgeComponent implements AfterViewInit, OnInit {
 
       this.hospService.getHospitaliseVariationTrancheAgeByDate('hosp', dateString, dateString2)
         .subscribe(data => {
-          this.variationData.datasets.push({
+          this._variationData.datasets.push({
             label: `Variation des entrées à l'hopital entre le ${dateFr} et ${dateFr2}`,
             backgroundColor: '#0050ff',
             borderColor: '#0050ff',
@@ -156,17 +187,43 @@ export class HospAgeComponent implements AfterViewInit, OnInit {
 
       this.hospService.getHospitaliseVariationTrancheAgeByDate('rea', dateString, dateString2)
         .subscribe(data => {
-          this.variationData.datasets.push({
+          this._variationData.datasets.push({
             label: `Variation des entrées en réanimation entre le ${dateFr} et ${dateFr2}`,
             backgroundColor: '#ff0000',
             borderColor: '#ff0000',
             data
           });
 
-          if (this.chartVariation) {
-            this.chartVariation.refresh();
+          if (this._chartVariation) {
+            this._chartVariation.refresh();
           }
         });
     }
+  }
+
+  private updateChart(date: any, couleur: any, label: any, filtre: any): void {
+    const dateString = moment(date).format('YYYY-MM-DD');
+    const dateFr = moment(date).format('DD-MM-YYYY');
+    this.hospService.getHospitaliseTrancheAgeByDate(filtre, dateString)
+      .subscribe(data => {
+        if (this._proportion) {
+          const total = this.hospService.reduceAdd(data);
+          data = data.map(d => this.hospService.roundDecimal((d * 100) / total, 2));
+        }
+        this._data.datasets.push({
+          label: `${label} ${dateFr}`,
+          backgroundColor: couleur,
+          borderColor: couleur,
+          data
+        });
+        if (this._chart) {
+          this._chart.refresh();
+        }
+      });
+  }
+
+  private init(): void {
+    this._maxDate = moment(new Date(), 'YYYY-MM-DD').add(-1, 'day').toDate();
+    this._jour = this._jour ? this._jour : this._maxDate;
   }
 }

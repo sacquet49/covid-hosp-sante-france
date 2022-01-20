@@ -5,6 +5,7 @@ import {AdresseService} from '../../services/adresse.service';
 import {SelectItem} from 'primeng/api';
 import {HospitaliseService} from '../../services/hospitalise.service';
 import * as moment from 'moment';
+import {TYPE_STAT} from '../hosp-age.model';
 
 @Component({
   selector: 'app-hosp-age-in-time',
@@ -13,94 +14,138 @@ import * as moment from 'moment';
 export class HospAgeInTimeComponent implements OnInit {
 
   @ViewChild('chartEvolution')
-  chartEvolution: UIChart;
+  private _chartEvolution: UIChart;
   @ViewChild('region')
-  region: Dropdown;
-  dataEvolution = {
+  private _region: Dropdown;
+  private _dataEvolution = {
     labels: [],
     datasets: []
   };
   @Input()
-  minDate;
+  public minDate;
   @Input()
-  maxDate;
-  jours;
-  joursSelected = [];
-  regions: any = [];
-  regionSelected: string;
-  regionsDrop: SelectItem[];
-  proportionEvoAge = false;
-  TYPE_STAT = {
-    HOSP: 'hosp',
-    REA: 'rea',
-    DC: 'dc'
-  };
-  typeStatSelected = this.TYPE_STAT.HOSP;
+  public maxDate;
+  private _jours;
+  private _joursSelected = [];
+  private _regions: any = [];
+  private _regionSelected: string;
+  private _regionsDrop: SelectItem[];
+  private _proportionEvoAge = false;
+  private _typeStatSelected = TYPE_STAT.HOSP;
 
-  constructor(private hospService: HospitaliseService, private adresseService: AdresseService) {
+  get type_stat(): any {
+    return TYPE_STAT;
+  }
+
+  get jours(): any {
+    return this._jours;
+  }
+
+  set jours(jour) {
+    this._jours = jour;
+  }
+
+  get typeStatSelected(): any {
+    return this._typeStatSelected;
+  }
+
+  set typeStatSelected(typeStat) {
+    this._typeStatSelected = typeStat;
+  }
+
+  get proportionEvoAge(): any {
+    return this._proportionEvoAge;
+  }
+
+  set proportionEvoAge(proportion) {
+    this._proportionEvoAge = proportion;
+  }
+
+  get regionSelected(): any {
+    return this._regionSelected;
+  }
+
+  set regionSelected(region) {
+    this._regionSelected = region;
+  }
+
+  get regionsDrop(): any {
+    return this._regionsDrop;
+  }
+
+  get dataEvolution(): any {
+    return this._dataEvolution;
+  }
+
+  constructor(private hospService: HospitaliseService,
+              private adresseService: AdresseService) {
     this.adresseService.getAllRegion().subscribe(rep => {
-      this.regions = rep;
-      this.regionsDrop = this.regions.map(reg => ({label: reg.code + ' - ' + reg.nom, value: reg.code}));
+      this._regions = rep;
+      this._regionsDrop = this._regions.map(reg => ({label: reg.code + ' - ' + reg.nom, value: reg.code}));
     });
   }
 
-  ngOnInit(): void {
+  public ngOnInit(): void {
     setTimeout(() => this.init(), 50);
   }
 
-  init(): void {
-    const today = new Date();
-    this.joursSelected.push(moment(today).add(-365, 'day').format('YYYY-MM-DD'));
-    this.joursSelected.push(moment(today).format('YYYY-MM-DD'));
-    this.jours = new Array();
-    this.jours[0] = moment(today).add(-365, 'day').toDate();
-    this.jours[1] = today;
-    this.getEvolutionParTrancheAge();
-  }
-
-  getEvolutionParTrancheAge(): void {
-    this.hospService.labelsDayByDate(this.joursSelected[0], this.joursSelected[1])
+  public getEvolutionParTrancheAge(): void {
+    this.hospService.labelsDayByDate(this._joursSelected[0], this._joursSelected[1])
       .subscribe(dataLabels => {
-        this.dataEvolution.labels = dataLabels;
-        if (!this.regionSelected) {
-          this.region.resetFilter();
+        this._dataEvolution.labels = dataLabels;
+        if (!this._regionSelected) {
+          this._region.resetFilter();
         }
-        if (this.chartEvolution) {
-          this.chartEvolution.reinit();
-          this.chartEvolution.refresh();
+        if (this._chartEvolution) {
+          this._chartEvolution.reinit();
+          this._chartEvolution.refresh();
         }
-        this.dataEvolution.datasets = [];
+        this._dataEvolution.datasets = [];
 
-        this.hospService.getdataAgeByTypeAndDateAndRegion(this.typeStatSelected, this.joursSelected[0], this.joursSelected[1], this.regionSelected)
+        this.hospService.getdataAgeByTypeAndDateAndRegion(this._typeStatSelected, this._joursSelected[0],
+          this._joursSelected[1], this._regionSelected)
           .subscribe(data => {
             this.printValueOnGraph(data);
           });
       });
   }
 
-  private printValueOnGraph(evolutionByAge: any[]): void {
-    evolutionByAge.forEach(t => {
-      this.dataEvolution.datasets.push({
-        label: `${t.label}`,
-        fill: false,
-        borderColor: t.color,
-        data: this.proportionEvoAge ? t.dataP : t.data
-      });
-    });
-    this.chartEvolution.refresh();
-  }
-
-  refreshVariation(): void {
-    if (this.jours && this.jours[1]) {
-      this.joursSelected = [];
-      const jourMin = this.jours[0] && !this.jours[1] ? this.jours[0] : (this.jours[0] < this.jours[1] ? this.jours[0] : this.jours[1]);
-      const jourMax = this.jours[0] && this.jours[1] && this.jours[0] > this.jours[1] ? this.jours[0] : this.jours[1];
-      this.joursSelected.push(moment(jourMin).format('YYYY-MM-DD'));
-      this.joursSelected.push(moment(jourMax).format('YYYY-MM-DD'));
+  public refreshVariation(): void {
+    if (this._jours && this._jours[1]) {
+      this._joursSelected = [];
+      const jourMin = this._jours[0] && !this._jours[1] ? this._jours[0] :
+        (this._jours[0] < this._jours[1] ? this._jours[0] : this._jours[1]);
+      const jourMax = this._jours[0] && this._jours[1] && this._jours[0] > this._jours[1] ? this._jours[0] : this._jours[1];
+      this._joursSelected.push(moment(jourMin).format('YYYY-MM-DD'));
+      this._joursSelected.push(moment(jourMax).format('YYYY-MM-DD'));
       this.getEvolutionParTrancheAge();
-    } else if (this.joursSelected.length === 2) {
-      this.joursSelected = [];
+    } else if (this._joursSelected.length === 2) {
+      this._joursSelected = [];
       this.getEvolutionParTrancheAge();
     }
   }
+
+  private init(): void {
+    const today = new Date();
+    this._joursSelected.push(moment(today).add(-365, 'day').format('YYYY-MM-DD'));
+    this._joursSelected.push(moment(today).format('YYYY-MM-DD'));
+    this._jours = new Array();
+    this._jours[0] = moment(today).add(-365, 'day').toDate();
+    this._jours[1] = today;
+    this.getEvolutionParTrancheAge();
+  }
+
+  private printValueOnGraph(evolutionByAge: any[]): void {
+    evolutionByAge.forEach(t => {
+      this._dataEvolution.datasets.push({
+        label: `${t.label}`,
+        fill: false,
+        borderColor: t.color,
+        data: this._proportionEvoAge ? t.dataP : t.data
+      });
+    });
+    this._chartEvolution.refresh();
+  }
+
+
 }

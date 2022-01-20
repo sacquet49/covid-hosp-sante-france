@@ -6,161 +6,209 @@ import {SelectItem} from 'primeng/api';
 import * as math from 'mathjs';
 import {Dropdown} from 'primeng/dropdown';
 import * as moment from 'moment';
+import {ENUM_SEX, LABEL_HOSPITALISATION, LABEL_REANIMATION} from './courbe-hosp-courant.model';
 
 @Component({
   selector: 'courbe-hosp-courant',
-  templateUrl: './courbe-hosp-courant.component.html',
-  providers: []
+  templateUrl: './courbe-hosp-courant.component.html'
 })
 export class CourbeHospCourantComponent implements AfterViewInit {
 
-  ENUM_SEX = {
-    TOUS: '0',
-    HOMME: '1',
-    FEMME: '2'
-  };
-  sexSelected = this.ENUM_SEX.TOUS;
-  departements: any = [];
-  jours;
-  minDate;
-  maxDate;
-  joursSelected = [];
-  departementSelected: string;
-  departementsDrop: SelectItem[];
-  LABEL_HOSPITALISATION = `Patients covid hospitaliser (comprend les réanimations)`;
-  LABEL_REANIMATION = `Patients covid en réanimation`;
+  private _sexSelected = ENUM_SEX.TOUS;
+  private _departements: any = [];
+  private _jours;
+  private _minDate;
+  private _maxDate;
+  private _joursSelected = [];
+  private _departementSelected: string;
+  private _departementsDrop: SelectItem[];
   @ViewChild('chart')
-  chart: UIChart;
+  private _chart: UIChart;
   @ViewChild('chartDece')
-  chartDece: UIChart;
+  private _chartDece: UIChart;
   @ViewChild('chartHospEcartType')
-  chartHospEcartType: UIChart;
+  private _chartHospEcartType: UIChart;
   @ViewChild('departement')
-  departement: Dropdown;
-  data = {
+  private _departement: Dropdown;
+  private _data = {
     labels: [],
     datasets: []
   };
-  dataDece = {
+  private _dataDece = {
     labels: [],
     datasets: []
   };
-  dataHospEcartType = {
+  private _dataHospEcartType = {
     labels: [],
     datasets: []
   };
 
-  constructor(private hospService: HospitaliseService, private adresseService: AdresseService) {
+  get enumSex(): any {
+    return ENUM_SEX;
+  }
+
+  get sexSelected(): any {
+    return this._sexSelected;
+  }
+
+  set sexSelected(sex) {
+    this._sexSelected = sex;
+  }
+
+  get departementsDrop(): any {
+    return this._departementsDrop;
+  }
+
+  get departementSelected(): any {
+    return this._departementSelected;
+  }
+
+  set departementSelected(departement) {
+    this._departementSelected = departement;
+  }
+
+  get jours(): any {
+    return this._jours;
+  }
+
+  set jours(jour) {
+    this._jours = jour;
+  }
+
+  get minDate(): any {
+    return this._minDate;
+  }
+
+  get maxDate(): any {
+    return this._maxDate;
+  }
+
+  get data(): any {
+    return this._data;
+  }
+
+  get dataDece(): any {
+    return this._dataDece;
+  }
+
+  get dataHospEcartType(): any {
+    return this._dataHospEcartType;
+  }
+
+  constructor(private hospService: HospitaliseService,
+              private adresseService: AdresseService) {
     this.adresseService.getAllDepartement().subscribe(rep => {
-      this.departements = rep;
-      this.departementsDrop = this.departements.map(dep => ({label: dep.code + ' - ' + dep.nom, value: dep.code}));
+      this._departements = rep;
+      this._departementsDrop = this._departements.map(dep => ({label: dep.code + ' - ' + dep.nom, value: dep.code}));
     });
   }
 
-  ngAfterViewInit(): void {
+  public ngAfterViewInit(): void {
     setTimeout(() => this.init(), 50);
   }
 
-  init(): void {
+  public refresh(): void {
+    this.selectedDate();
+    if (!this._departementSelected) {
+      this._departement.resetFilter();
+    }
+    this._chart.reinit();
+    this._data.datasets = [];
+    this.updateChart('#0f29ae', LABEL_HOSPITALISATION, 'hosp', this._sexSelected);
+    this.updateChart('#e00101', LABEL_REANIMATION, 'rea', this._sexSelected);
+  }
+
+  private init(): void {
     this.initDateForSelector();
-    this.updateChart('#0f29ae', this.LABEL_HOSPITALISATION, 'hosp', this.ENUM_SEX.TOUS);
-    this.updateChart('#e00101', this.LABEL_REANIMATION, 'rea', this.ENUM_SEX.TOUS);
+    this.updateChart('#0f29ae', LABEL_HOSPITALISATION, 'hosp', ENUM_SEX.TOUS);
+    this.updateChart('#e00101', LABEL_REANIMATION, 'rea', ENUM_SEX.TOUS);
     this.hospService.getLabelsDay()
       .subscribe(labels => {
-        this.dataDece.labels = labels;
+        this._dataDece.labels = labels;
         this.updateChartDece();
 
-        this.dataHospEcartType.labels = labels;
+        this._dataHospEcartType.labels = labels;
         this.updateChartHospEcartType();
       });
   }
 
-  private initDateForSelector(): void {
-    const today = new Date();
-    this.joursSelected.push(moment(today).add(-365, 'day').format('YYYY-MM-DD'));
-    this.joursSelected.push(moment(today).format('YYYY-MM-DD'));
-    this.minDate = new Date();
-    this.minDate.setDate(18);
-    this.minDate.setMonth(2);
-    this.minDate.setFullYear(2020);
-    this.maxDate = moment(new Date(), 'YYYY-MM-DD').add(-1, 'day').toDate();
-    this.jours = new Array();
-    this.jours[0] = moment(today).add(-365, 'day').toDate();
-    this.jours[1] = today;
-  }
-
-  private selectedDate(): void {
-    if (this.jours && this.jours[1]) {
-      this.joursSelected = [];
-      const jourMin = this.jours[0] && !this.jours[1] ? this.jours[0] : (this.jours[0] < this.jours[1] ? this.jours[0] : this.jours[1]);
-      const jourMax = this.jours[0] && this.jours[1] && this.jours[0] > this.jours[1] ? this.jours[0] : this.jours[1];
-      this.joursSelected.push(moment(jourMin).format('YYYY-MM-DD'));
-      this.joursSelected.push(moment(jourMax).format('YYYY-MM-DD'));
-    } else if (this.joursSelected.length === 2) {
-      this.joursSelected = [];
-    }
-  }
-
-  refresh(): void {
-    this.selectedDate();
-    if (!this.departementSelected) {
-      this.departement.resetFilter();
-    }
-    this.chart.reinit();
-    this.data.datasets = [];
-    this.updateChart('#0f29ae', this.LABEL_HOSPITALISATION, 'hosp', this.sexSelected);
-    this.updateChart('#e00101', this.LABEL_REANIMATION, 'rea', this.sexSelected);
-  }
-
-  updateChart(couleur: any, label: any, filtre: any, sex: string): void {
-    this.hospService.labelsDayByDate(this.joursSelected[0], this.joursSelected[1])
+  private updateChart(couleur: any, label: any, filtre: any, sex: string): void {
+    this.hospService.labelsDayByDate(this._joursSelected[0], this._joursSelected[1])
       .subscribe(dataLabels => {
-        this.data.labels = dataLabels;
-        this.hospService.getDataByTypeAndSexAndDepartementAndDate(filtre, sex, this.departementSelected, this.joursSelected[0], this.joursSelected[1])
+        this._data.labels = dataLabels;
+        this.hospService.getDataByTypeAndSexAndDepartementAndDate(filtre, sex, this._departementSelected,
+          this._joursSelected[0], this._joursSelected[1])
           .subscribe(data => {
-            this.data.datasets.push({
+            this._data.datasets.push({
               label: `${label}`,
               fill: false,
               borderColor: couleur,
               data
             });
-            this.chart.refresh();
+            this._chart.refresh();
           });
       });
   }
 
-  updateChartDece(): void {
+  private updateChartDece(): void {
     this.hospService.getDecesByDay().subscribe(data => {
-      this.dataDece.datasets.push({
+      this._dataDece.datasets.push({
         label: `Nombre quotidien de personnes nouvellement décédées`,
         fill: false,
         borderColor: '#1c9903',
         data
       });
-      this.chartDece.refresh();
+      this._chartDece.refresh();
     });
   }
 
-  updateChartHospEcartType(): void {
-    this.hospService.getdataHospByTypeAndSexeAndDepartement('hosp', this.ENUM_SEX.TOUS, this.departementSelected)
+  private updateChartHospEcartType(): void {
+    this.hospService.getdataHospByTypeAndSexeAndDepartement('hosp', ENUM_SEX.TOUS, this._departementSelected)
       .subscribe(data => {
         let dataStd = data.map((v, i) => data[i + 1] && v ? math.std(v, data[i + 1]) : undefined);
         dataStd = dataStd.map((v, i) => dataStd[i + 1] && v ? (v + dataStd[i + 1]) / 2 : undefined);
-        this.dataHospEcartType.datasets.push({
+        this._dataHospEcartType.datasets.push({
           label: `Ecart type du nombre de personnes actuellement hospitalisées`,
           fill: false,
           borderColor: '#022179',
           data: dataStd
         });
         this.hospService.getDecesByDay().subscribe(dataDece => {
-          this.dataHospEcartType.datasets.push({
+          this._dataHospEcartType.datasets.push({
             label: `Nombre quotidien de personnes nouvellement décédées`,
             fill: false,
             borderColor: '#990303',
             data: dataDece
           });
-          this.chartHospEcartType.refresh();
+          this._chartHospEcartType.refresh();
         });
       });
+  }
+
+  private initDateForSelector(): void {
+    const today = new Date();
+    this._joursSelected.push(moment(today).add(-365, 'day').format('YYYY-MM-DD'));
+    this._joursSelected.push(moment(today).format('YYYY-MM-DD'));
+    this._minDate = new Date();
+    this._minDate.setDate(18);
+    this._minDate.setMonth(2);
+    this._minDate.setFullYear(2020);
+    this._maxDate = moment(new Date(), 'YYYY-MM-DD').add(-1, 'day').toDate();
+    this._jours = new Array();
+    this._jours[0] = moment(today).add(-365, 'day').toDate();
+    this._jours[1] = today;
+  }
+
+  private selectedDate(): void {
+    if (this._jours && this._jours[1]) {
+      this._joursSelected = [];
+      const jourMin = this._jours[0] && !this._jours[1] ? this._jours[0] :
+        (this._jours[0] < this._jours[1] ? this._jours[0] : this._jours[1]);
+      const jourMax = this._jours[0] && this._jours[1] && this._jours[0] > this._jours[1] ? this._jours[0] : this._jours[1];
+      this._joursSelected.push(moment(jourMin).format('YYYY-MM-DD'));
+      this._joursSelected.push(moment(jourMax).format('YYYY-MM-DD'));
+    } else if (this._joursSelected.length === 2) {
+      this._joursSelected = [];
+    }
   }
 }

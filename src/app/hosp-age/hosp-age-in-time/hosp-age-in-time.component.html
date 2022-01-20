@@ -1,16 +1,16 @@
 <div class="p-fluid p-grid p-formgrid p-mb-2">
   <div class="p-field-radiobutton p-col-12 p-md-2">
-    <p-radioButton name="typeStat" [value]="TYPE_STAT.HOSP" [(ngModel)]="typeStatSelected"
+    <p-radioButton name="typeStat" [value]="type_stat.HOSP" [(ngModel)]="typeStatSelected"
                    inputId="type1" (ngModelChange)="getEvolutionParTrancheAge()"></p-radioButton>
     <label for="type1">Hospitaliser & réanimations</label>
   </div>
   <div class="p-field-radiobutton p-col-12 p-md-1">
-    <p-radioButton name="typeStat" [value]="TYPE_STAT.REA" [(ngModel)]="typeStatSelected"
+    <p-radioButton name="typeStat" [value]="type_stat.REA" [(ngModel)]="typeStatSelected"
                    inputId="type2" (ngModelChange)="getEvolutionParTrancheAge()"></p-radioButton>
     <label for="type2">Réanimations</label>
   </div>
   <div class="p-field-radiobutton p-col-12 p-md-3">
-    <p-radioButton name="typeStat" [value]="TYPE_STAT.DC" [(ngModel)]="typeStatSelected"
+    <p-radioButton name="typeStat" [value]="type_stat.DC" [(ngModel)]="typeStatSelected"
                    inputId="type3" (ngModelChange)="getEvolutionParTrancheAge()"></p-radioButton>
     <label for="type3">Décés à l'hôpital (Attention chiffre cumulé, non quotidien)</label>
   </div>
