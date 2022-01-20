@@ -4,11 +4,31 @@ export class Departement {
     codeRegion: string;
 }
 
-export class Ville {
+export class Region {
     nom: string;
     code: string;
-    codeRegion: string;
-    codesPostaux: string[];
-    codeDepartement: string;
-    population: number;
+}
+
+export class DataChartBar {
+  labels: string[];
+  datasets: DataSetBar[];
+}
+
+export class DataSetBar {
+  label: string;
+  borderColor: string;
+  backgroundColor: string;
+  data: number[];
+}
+
+export class DataChart {
+  labels: string[];
+  datasets: DataSet[];
+}
+
+export class DataSet {
+  label: string;
+  fill: boolean;
+  borderColor: string;
+  data: number[];
 }

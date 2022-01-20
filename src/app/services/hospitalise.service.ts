@@ -3,6 +3,7 @@ import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {EventEmitter} from 'events';
 import {environment} from '../../environments/environment';
+import {RegionData} from '../hosp-age/hosp-age.model';
 
 @Injectable()
 export class HospitaliseService {
@@ -31,45 +32,45 @@ export class HospitaliseService {
     return array?.reduce(reducer);
   }
 
-  roundDecimal(nombre, precision): any {
-    precision = precision || 2;
-    const tmp = Math.pow(10, precision);
+  roundDecimal(nombre: number, precision: number): number {
+    const precisionNumber = precision || 2;
+    const tmp = Math.pow(10, precisionNumber);
     return Math.round(nombre * tmp) / tmp;
   }
 
-  getdataHospByTypeAndSexeAndDepartement(type, sex, departement): Observable<any> {
-    return this.http.get(`${environment.urlWs}/data/${type}/${sex}/${departement}`);
+  public getdataHospByTypeAndSexeAndDepartement(type, sex, departement): Observable<any[]> {
+    return this.http.get<any[]>(`${environment.urlWs}/data/${type}/${sex}/${departement}`);
   }
 
-  getDecesByDay(): Observable<any> {
-    return this.http.get(`${environment.urlWs}/data/decesByDay`);
+  public getDecesByDay(): Observable<number[]> {
+    return this.http.get<number[]>(`${environment.urlWs}/data/decesByDay`);
   }
 
-  getLabelsDay(): Observable<any> {
-    return this.http.get(`${environment.urlWs}/data/labelsDay`);
+  public getLabelsDay(): Observable<string[]> {
+    return this.http.get<string[]>(`${environment.urlWs}/data/labelsDay`);
   }
 
-  getdataAgeByTypeAndDateAndRegion(type, dateMin, dateMax, region): Observable<any> {
-    return this.http.get(`${environment.urlWs}/data/trancheAge/${type}/${dateMin}/${dateMax}/${region}`);
+  public getdataAgeByTypeAndDateAndRegion(type, dateMin, dateMax, region): Observable<RegionData[]> {
+    return this.http.get<RegionData[]>(`${environment.urlWs}/data/trancheAge/${type}/${dateMin}/${dateMax}/${region}`);
   }
 
-  labelsDayByDate(dateMin, dateMax): Observable<any> {
-    return this.http.get(`${environment.urlWs}/data/labelsDay/ByDate/${dateMin}/${dateMax}`);
+  public labelsDayByDate(dateMin, dateMax): Observable<string[]> {
+    return this.http.get<string[]>(`${environment.urlWs}/data/labelsDay/ByDate/${dateMin}/${dateMax}`);
   }
 
-  getHospitaliseTrancheAgeByDate(filtre, date): Observable<any> {
-    return this.http.get(`${environment.urlWs}/data/hospitalise/${filtre}/trancheAge/byDate/${date}`);
+  public getHospitaliseTrancheAgeByDate(filtre, date): Observable<number[]> {
+    return this.http.get<number[]>(`${environment.urlWs}/data/hospitalise/${filtre}/trancheAge/byDate/${date}`);
   }
 
-  getHospitaliseVariationTrancheAgeByDate(filtre, dateMin, dateMax): Observable<any> {
-    return this.http.get(`${environment.urlWs}/data/hospitalise/variation/${filtre}/trancheAge/byDate/${dateMin}/${dateMax}`);
+  public getHospitaliseVariationTrancheAgeByDate(filtre, dateMin, dateMax): Observable<number[]> {
+    return this.http.get<number[]>(`${environment.urlWs}/data/hospitalise/variation/${filtre}/trancheAge/byDate/${dateMin}/${dateMax}`);
   }
 
-  getDataByTypeAndSexAndDepartementAndDate(filtre, sex, departement, dateMin, dateMax): Observable<any> {
-    return this.http.get(`${environment.urlWs}/data/hospCourant/byDate/${filtre}/${sex}/${departement}/${dateMin}/${dateMax}`);
+  public getDataByTypeAndSexAndDepartementAndDate(filtre, sex, departement, dateMin, dateMax): Observable<number[]> {
+    return this.http.get<number[]>(`${environment.urlWs}/data/hospCourant/byDate/${filtre}/${sex}/${departement}/${dateMin}/${dateMax}`);
   }
 
-  update(): Observable<any> {
+  public update(): Observable<any> {
     return this.http.get(`${environment.urlWs}/data/update`);
   }
 }

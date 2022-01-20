@@ -3,6 +3,7 @@ import {HospitaliseService} from '../services/hospitalise.service';
 import * as moment from 'moment';
 import {UIChart} from 'primeng/chart';
 import {LABEL, LABEL_DECEDE, LABEL_HOSPITALISATION, LABEL_REANIMATION} from './hosp-age.model';
+import {DataChartBar} from '../services/core.model';
 
 @Component({
   selector: 'hosp-age',
@@ -20,24 +21,15 @@ export class HospAgeComponent implements AfterViewInit, OnInit {
   private _chartVariation: UIChart;
   @ViewChild('chartDece')
   private _chartDece: UIChart;
-  private _minDate;
-  private _maxDate;
-  private _jour;
-  private _jour2;
-  private _data = {
-    labels: LABEL,
-    datasets: []
-  };
-  private _dataDece = {
-    labels: LABEL,
-    datasets: []
-  };
-  private _variationData = {
-    labels: LABEL,
-    datasets: []
-  };
+  private _minDate: Date;
+  private _maxDate: Date;
+  private _jour: Date;
+  private _jour2: Date;
+  private _data: DataChartBar = new DataChartBar();
+  private _dataDece: DataChartBar = new DataChartBar();
+  private _variationData: DataChartBar = new DataChartBar();
 
-  get proportionDece(): any {
+  get proportionDece(): boolean {
     return this._proportionDece;
   }
 
@@ -45,7 +37,7 @@ export class HospAgeComponent implements AfterViewInit, OnInit {
     this._proportionDece = proportion;
   }
 
-  get variation(): any {
+  get variation(): boolean {
     return this._variation;
   }
 
@@ -53,7 +45,7 @@ export class HospAgeComponent implements AfterViewInit, OnInit {
     this._variation = variation;
   }
 
-  get proportion(): any {
+  get proportion(): boolean {
     return this._proportion;
   }
 
@@ -61,7 +53,7 @@ export class HospAgeComponent implements AfterViewInit, OnInit {
     this._proportion = proportion;
   }
 
-  get jour2(): any {
+  get jour2(): Date {
     return this._jour2;
   }
 
@@ -69,7 +61,7 @@ export class HospAgeComponent implements AfterViewInit, OnInit {
     this._jour2 = jour2;
   }
 
-  get jour(): any {
+  get jour(): Date {
     return this._jour;
   }
 
@@ -77,23 +69,23 @@ export class HospAgeComponent implements AfterViewInit, OnInit {
     this._jour = jour;
   }
 
-  get minDate(): any {
+  get minDate(): Date {
     return this._minDate;
   }
 
-  get maxDate(): any {
+  get maxDate(): Date {
     return this._maxDate;
   }
 
-  get variationData(): any {
+  get variationData(): DataChartBar {
     return this._variationData;
   }
 
-  get data(): any {
+  get data(): DataChartBar {
     return this._data;
   }
-  
-  get dataDece(): any {
+
+  get dataDece(): DataChartBar {
     return this._dataDece;
   }
 
@@ -106,6 +98,9 @@ export class HospAgeComponent implements AfterViewInit, OnInit {
     this._minDate.setMonth(2);
     this._minDate.setFullYear(2020);
     setTimeout(() => this.init(), 50);
+    this._data.labels = LABEL;
+    this._dataDece.labels = LABEL;
+    this._variationData.labels = LABEL;
   }
 
   public ngAfterViewInit(): void {

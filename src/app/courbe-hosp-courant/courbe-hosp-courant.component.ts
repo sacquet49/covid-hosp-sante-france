@@ -7,6 +7,7 @@ import * as math from 'mathjs';
 import {Dropdown} from 'primeng/dropdown';
 import * as moment from 'moment';
 import {ENUM_SEX, LABEL_HOSPITALISATION, LABEL_REANIMATION} from './courbe-hosp-courant.model';
+import {DataChart, Departement} from '../services/core.model';
 
 @Component({
   selector: 'courbe-hosp-courant',
@@ -15,11 +16,11 @@ import {ENUM_SEX, LABEL_HOSPITALISATION, LABEL_REANIMATION} from './courbe-hosp-
 export class CourbeHospCourantComponent implements AfterViewInit {
 
   private _sexSelected = ENUM_SEX.TOUS;
-  private _departements: any = [];
-  private _jours;
-  private _minDate;
-  private _maxDate;
-  private _joursSelected = [];
+  private _departements: Departement[] = [];
+  private _jours: Date[];
+  private _minDate: Date;
+  private _maxDate: Date;
+  private _joursSelected: string[] = [];
   private _departementSelected: string;
   private _departementsDrop: SelectItem[];
   @ViewChild('chart')
@@ -30,24 +31,15 @@ export class CourbeHospCourantComponent implements AfterViewInit {
   private _chartHospEcartType: UIChart;
   @ViewChild('departement')
   private _departement: Dropdown;
-  private _data = {
-    labels: [],
-    datasets: []
-  };
-  private _dataDece = {
-    labels: [],
-    datasets: []
-  };
-  private _dataHospEcartType = {
-    labels: [],
-    datasets: []
-  };
+  private _data: DataChart = new DataChart();
+  private _dataDece: DataChart = new DataChart();
+  private _dataHospEcartType: DataChart = new DataChart();
 
   get enumSex(): any {
     return ENUM_SEX;
   }
 
-  get sexSelected(): any {
+  get sexSelected(): string {
     return this._sexSelected;
   }
 
@@ -55,11 +47,11 @@ export class CourbeHospCourantComponent implements AfterViewInit {
     this._sexSelected = sex;
   }
 
-  get departementsDrop(): any {
+  get departementsDrop(): SelectItem[] {
     return this._departementsDrop;
   }
 
-  get departementSelected(): any {
+  get departementSelected(): string {
     return this._departementSelected;
   }
 
@@ -67,31 +59,31 @@ export class CourbeHospCourantComponent implements AfterViewInit {
     this._departementSelected = departement;
   }
 
-  get jours(): any {
+  get jours(): Date[] {
     return this._jours;
   }
 
-  set jours(jour) {
-    this._jours = jour;
+  set jours(jours) {
+    this._jours = jours;
   }
 
-  get minDate(): any {
+  get minDate(): Date {
     return this._minDate;
   }
 
-  get maxDate(): any {
+  get maxDate(): Date {
     return this._maxDate;
   }
 
-  get data(): any {
+  get data(): DataChart {
     return this._data;
   }
 
-  get dataDece(): any {
+  get dataDece(): DataChart {
     return this._dataDece;
   }
 
-  get dataHospEcartType(): any {
+  get dataHospEcartType(): DataChart {
     return this._dataHospEcartType;
   }
 

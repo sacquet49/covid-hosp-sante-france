@@ -6,6 +6,7 @@ import {SelectItem} from 'primeng/api';
 import {HospitaliseService} from '../../services/hospitalise.service';
 import * as moment from 'moment';
 import {TYPE_STAT} from '../hosp-age.model';
+import {DataChart, Region} from '../../services/core.model';
 
 @Component({
   selector: 'app-hosp-age-in-time',
@@ -17,17 +18,14 @@ export class HospAgeInTimeComponent implements OnInit {
   private _chartEvolution: UIChart;
   @ViewChild('region')
   private _region: Dropdown;
-  private _dataEvolution = {
-    labels: [],
-    datasets: []
-  };
+  private _dataEvolution: DataChart = new DataChart();
   @Input()
-  public minDate;
+  public minDate: Date;
   @Input()
-  public maxDate;
-  private _jours;
-  private _joursSelected = [];
-  private _regions: any = [];
+  public maxDate: Date;
+  private _jours: Date[];
+  private _joursSelected: string[] = [];
+  private _regions: Region[] = [];
   private _regionSelected: string;
   private _regionsDrop: SelectItem[];
   private _proportionEvoAge = false;
@@ -37,7 +35,7 @@ export class HospAgeInTimeComponent implements OnInit {
     return TYPE_STAT;
   }
 
-  get jours(): any {
+  get jours(): Date[] {
     return this._jours;
   }
 
@@ -45,7 +43,7 @@ export class HospAgeInTimeComponent implements OnInit {
     this._jours = jour;
   }
 
-  get typeStatSelected(): any {
+  get typeStatSelected(): string {
     return this._typeStatSelected;
   }
 
@@ -53,7 +51,7 @@ export class HospAgeInTimeComponent implements OnInit {
     this._typeStatSelected = typeStat;
   }
 
-  get proportionEvoAge(): any {
+  get proportionEvoAge(): boolean {
     return this._proportionEvoAge;
   }
 
@@ -61,7 +59,7 @@ export class HospAgeInTimeComponent implements OnInit {
     this._proportionEvoAge = proportion;
   }
 
-  get regionSelected(): any {
+  get regionSelected(): string {
     return this._regionSelected;
   }
 
@@ -69,11 +67,11 @@ export class HospAgeInTimeComponent implements OnInit {
     this._regionSelected = region;
   }
 
-  get regionsDrop(): any {
+  get regionsDrop(): SelectItem[] {
     return this._regionsDrop;
   }
 
-  get dataEvolution(): any {
+  get dataEvolution(): DataChart {
     return this._dataEvolution;
   }
 
@@ -129,7 +127,7 @@ export class HospAgeInTimeComponent implements OnInit {
     const today = new Date();
     this._joursSelected.push(moment(today).add(-365, 'day').format('YYYY-MM-DD'));
     this._joursSelected.push(moment(today).format('YYYY-MM-DD'));
-    this._jours = new Array();
+    this._jours = [];
     this._jours[0] = moment(today).add(-365, 'day').toDate();
     this._jours[1] = today;
     this.getEvolutionParTrancheAge();
