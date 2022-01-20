@@ -10,19 +10,27 @@ import {HospitaliseService} from './services/hospitalise.service';
 })
 export class AppComponent implements OnInit {
 
-  tabMenuItems: MenuItem[] = [
+  private _tabMenuItems: MenuItem[] = [
     {label: '', icon: 'pi pi-home', routerLink: ['home']},
     {label: 'Hospitalisation par âges', icon: 'pi pi-chart-bar', routerLink: ['age']},
     {label: 'Courbe hospitaliser courant', icon: 'pi pi-chart-line', routerLink: ['courant']},
   ];
-  currantItem;
+  private _currantItem: MenuItem;
+
+  get tabMenuItems(): MenuItem[] {
+    return this._tabMenuItems;
+  }
+
+  get currantItem(): MenuItem {
+    return this._currantItem;
+  }
 
   constructor(private location: Location,
               private hospService: HospitaliseService,
               private config: PrimeNGConfig) {
   }
 
-  ngOnInit(): void {
+  public ngOnInit(): void {
     this.hospService.update().subscribe();
     this.config.setTranslation({
       dayNames: ['Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi'],
@@ -34,9 +42,9 @@ export class AppComponent implements OnInit {
       clear: 'Effacer',
       weekHeader: 'Semaine'
     });
-    this.currantItem = this.location.path().replace('/', '') !== '' ?
-      this.tabMenuItems
+    this._currantItem = this.location.path().replace('/', '') !== '' ?
+      this._tabMenuItems
         .find(mi => this.location.path().replace('/', '').includes(mi.routerLink['0'])) :
-      this.tabMenuItems[0];
+      this._tabMenuItems[0];
   }
 }
