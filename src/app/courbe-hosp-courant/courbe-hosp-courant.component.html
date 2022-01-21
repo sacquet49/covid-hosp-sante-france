@@ -19,7 +19,7 @@
     </div>
     <div class="p-field p-col-12 p-md-3">
       <p-dropdown [options]="departementsDrop" [(ngModel)]="departementSelected"
-                  [style]="{'width':'100%'}" filter="true" (onChange)="refresh()"
+                  [styleClass]="'w-100'" filter="true" (onChange)="refresh()"
                   [showClear]="true" placeholder="Département" #departement>
         <ng-template let-item pTemplate="selectedItem">
           <span>{{item.label}}</span>

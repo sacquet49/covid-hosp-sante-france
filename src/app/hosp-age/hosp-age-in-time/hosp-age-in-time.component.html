@@ -21,7 +21,7 @@
   </div>
   <div class="p-field p-col-12 p-md-3">
     <p-dropdown [options]="regionsDrop" [(ngModel)]="regionSelected"
-                [style]="{'width':'100%'}" filter="true" (onChange)="getEvolutionParTrancheAge()"
+                [styleClass]="'w-100'" filter="true" (onChange)="getEvolutionParTrancheAge()"
                 [showClear]="true" placeholder="Région" #region>
       <ng-template let-item pTemplate="selectedItem">
         <span>{{item.label}}</span>
