@@ -1,32 +1,27 @@
-import {Component, OnInit} from '@angular/core';
+import {AfterViewChecked, Component, OnInit, ViewChild} from '@angular/core';
 import {MenuItem, PrimeNGConfig} from 'primeng/api';
-import {Location} from '@angular/common';
 import {HospitaliseService} from './services/hospitalise.service';
+import {TabMenu} from 'primeng/tabmenu';
 
 @Component({
   selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss']
+  templateUrl: './app.component.html'
 })
-export class AppComponent implements OnInit {
+export class AppComponent implements OnInit, AfterViewChecked {
 
+  @ViewChild('tabMenu')
+  private _tabMenuObjet: TabMenu;
   private _tabMenuItems: MenuItem[] = [
-    {label: '', icon: 'pi pi-home', routerLink: ['home']},
-    {label: 'Hospitalisation par âges', icon: 'pi pi-chart-bar', routerLink: ['age']},
-    {label: 'Courbe hospitaliser courant', icon: 'pi pi-chart-line', routerLink: ['courant']},
+    {label: '', icon: 'pi pi-home', routerLink: ['/home']},
+    {label: 'Hospitalisation par âges', icon: 'pi pi-chart-bar', routerLink: ['/age']},
+    {label: 'Courbe hospitaliser courant', icon: 'pi pi-chart-line', routerLink: ['/courant']}
   ];
-  private _currantItem: MenuItem;
 
   get tabMenuItems(): MenuItem[] {
     return this._tabMenuItems;
   }
 
-  get currantItem(): MenuItem {
-    return this._currantItem;
-  }
-
-  constructor(private location: Location,
-              private hospService: HospitaliseService,
+  constructor(private hospService: HospitaliseService,
               private config: PrimeNGConfig) {
   }
 
@@ -42,9 +37,9 @@ export class AppComponent implements OnInit {
       clear: 'Effacer',
       weekHeader: 'Semaine'
     });
-    this._currantItem = this.location.path().replace('/', '') !== '' ?
-      this._tabMenuItems
-        .find(mi => this.location.path().replace('/', '').includes(mi.routerLink['0'])) :
-      this._tabMenuItems[0];
+  }
+
+  public ngAfterViewChecked(): void {
+    this._tabMenuObjet.updateInkBar();
   }
 }
