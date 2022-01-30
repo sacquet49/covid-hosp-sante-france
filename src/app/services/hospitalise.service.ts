@@ -39,38 +39,38 @@ export class HospitaliseService {
   }
 
   public getdataHospByTypeAndSexeAndDepartement(type, sex, departement): Observable<any[]> {
-    return this.http.get<any[]>(`${environment.urlWs}/data/${type}/${sex}/${departement}`);
+    return this.http.get<any[]>(`${environment.urlWs}/open/api/${type}/${sex}/${departement}`);
   }
 
   public getDecesByDay(): Observable<number[]> {
-    return this.http.get<number[]>(`${environment.urlWs}/data/decesByDay`);
+    return this.http.get<number[]>(`${environment.urlWs}/open/api/decesByDay`);
   }
 
   public getLabelsDay(): Observable<string[]> {
-    return this.http.get<string[]>(`${environment.urlWs}/data/labelsDay`);
+    return this.http.get<string[]>(`${environment.urlWs}/open/api/labelsDay`);
   }
 
   public getdataAgeByTypeAndDateAndRegion(type, dateMin, dateMax, region): Observable<RegionData[]> {
-    return this.http.get<RegionData[]>(`${environment.urlWs}/data/trancheAge/${type}/${dateMin}/${dateMax}/${region}`);
+    return this.http.get<RegionData[]>(`${environment.urlWs}/open/api/trancheAge/${type}/${dateMin}/${dateMax}/${region}`);
   }
 
   public labelsDayByDate(dateMin, dateMax): Observable<string[]> {
-    return this.http.get<string[]>(`${environment.urlWs}/data/labelsDay/ByDate/${dateMin}/${dateMax}`);
+    return this.http.get<string[]>(`${environment.urlWs}/open/api/labelsDay/ByDate/${dateMin}/${dateMax}`);
   }
 
   public getHospitaliseTrancheAgeByDate(filtre, date): Observable<number[]> {
-    return this.http.get<number[]>(`${environment.urlWs}/data/hospitalise/${filtre}/trancheAge/byDate/${date}`);
+    return this.http.get<number[]>(`${environment.urlWs}/open/api/hospitalise/${filtre}/trancheAge/byDate/${date}`);
   }
 
   public getHospitaliseVariationTrancheAgeByDate(filtre, dateMin, dateMax): Observable<number[]> {
-    return this.http.get<number[]>(`${environment.urlWs}/data/hospitalise/variation/${filtre}/trancheAge/byDate/${dateMin}/${dateMax}`);
+    return this.http.get<number[]>(`${environment.urlWs}/open/api/hospitalise/variation/${filtre}/trancheAge/byDate/${dateMin}/${dateMax}`);
   }
 
   public getDataByTypeAndSexAndDepartementAndDate(filtre, sex, departement, dateMin, dateMax): Observable<number[]> {
-    return this.http.get<number[]>(`${environment.urlWs}/data/hospCourant/byDate/${filtre}/${sex}/${departement}/${dateMin}/${dateMax}`);
+    return this.http.get<number[]>(`${environment.urlWs}/open/api/hospCourant/byDate/${filtre}/${sex}/${departement}/${dateMin}/${dateMax}`);
   }
 
   public update(): Observable<any> {
-    return this.http.get(`${environment.urlWs}/data/update`);
+    return this.http.get(`${environment.urlWs}/open/api/update`);
   }
 }

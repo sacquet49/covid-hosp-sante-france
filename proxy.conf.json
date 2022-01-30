@@ -1,0 +1,14 @@
+{
+  "/open/api/*": {
+    "target": "http://[::1]:8080",
+    "secure": false,
+    "logLevel": "error",
+    "changeOrigin": true
+  },
+  "/private/api/*": {
+    "target": "http://[::1]:8080",
+    "secure": false,
+    "logLevel": "error",
+    "changeOrigin": true
+  }
+}
