@@ -135,7 +135,7 @@ export class CourbeHospCourantComponent implements AfterViewInit {
               label: `${label}`,
               fill: false,
               borderColor: couleur,
-              data
+              data: Object.values(data)
             });
             this._chart.refresh();
           });
@@ -148,7 +148,7 @@ export class CourbeHospCourantComponent implements AfterViewInit {
         label: `Nombre quotidien de personnes nouvellement décédées`,
         fill: false,
         borderColor: '#1c9903',
-        data
+        data: Object.values(data)
       });
       this._chartDece.refresh();
     });
@@ -157,7 +157,7 @@ export class CourbeHospCourantComponent implements AfterViewInit {
   private updateChartHospEcartType(): void {
     this.hospService.getdataHospByTypeAndSexeAndDepartement('hosp', ENUM_SEX.TOUS, this._departementSelected)
       .subscribe(data => {
-        let dataStd = data.map((v, i) => data[i + 1] && v ? math.std(v, data[i + 1]) : undefined);
+        let dataStd = Object.values(data).map((v, i) => data[i + 1] && v ? math.std(v, data[i + 1]) : undefined);
         dataStd = dataStd.map((v, i) => dataStd[i + 1] && v ? (v + dataStd[i + 1]) / 2 : undefined);
         this._dataHospEcartType.datasets.push({
           label: `Ecart type du nombre de personnes actuellement hospitalisées`,
@@ -170,7 +170,7 @@ export class CourbeHospCourantComponent implements AfterViewInit {
             label: `Nombre quotidien de personnes nouvellement décédées`,
             fill: false,
             borderColor: '#990303',
-            data: dataDece
+            data: Object.values(dataDece)
           });
           this._chartHospEcartType.refresh();
         });

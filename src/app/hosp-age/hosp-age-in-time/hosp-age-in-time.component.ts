@@ -5,7 +5,7 @@ import {AdresseService} from '../../services/adresse.service';
 import {SelectItem} from 'primeng/api';
 import {HospitaliseService} from '../../services/hospitalise.service';
 import * as moment from 'moment';
-import {TYPE_STAT} from '../hosp-age.model';
+import {RegionData, TYPE_STAT} from '../hosp-age.model';
 import {DataChart, Region} from '../../services/core.model';
 
 @Component({
@@ -133,13 +133,19 @@ export class HospAgeInTimeComponent implements OnInit {
     this.getEvolutionParTrancheAge();
   }
 
-  private printValueOnGraph(evolutionByAge: any[]): void {
+  private printValueOnGraph(evolutionByAge: RegionData[]): void {
     evolutionByAge.forEach(t => {
+      const data = Object.entries(t.data)
+        .sort((a, b) => a[0].localeCompare(b[0]))
+        .map(([key, value]) => value);
+      const dataP = Object.entries(t.dataP)
+        .sort((a, b) => a[0].localeCompare(b[0]))
+        .map(([key, value]) => value);
       this._dataEvolution.datasets.push({
         label: `${t.label}`,
         fill: false,
         borderColor: t.color,
-        data: this._proportionEvoAge ? t.dataP : t.data
+        data: this._proportionEvoAge ? dataP : data
       });
     });
     this._chartEvolution.refresh();

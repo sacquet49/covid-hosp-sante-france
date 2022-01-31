@@ -139,9 +139,9 @@ export class HospAgeComponent implements AfterViewInit, OnInit {
     const dateFr = moment(this._maxDate).format('DD-MM-YYYY');
     this.hospService.getHospitaliseTrancheAgeByDate('dc', dateString)
       .subscribe(data => {
-        const total = this.hospService.reduceAdd(data);
+        const total = this.hospService.reduceAdd(Object.values(data));
         if (this._proportionDece) {
-          data = data.map(d => this.hospService.roundDecimal((d * 100) / total, 2));
+          data = Object.values(data).map(d => this.hospService.roundDecimal((d * 100) / total, 2));
         }
         this._dataDece.datasets.push({
           label: `${LABEL_DECEDE} ${dateFr} total : ${total}`,
@@ -176,7 +176,7 @@ export class HospAgeComponent implements AfterViewInit, OnInit {
             label: `Variation des entrées à l'hopital entre le ${dateFr} et ${dateFr2}`,
             backgroundColor: '#0050ff',
             borderColor: '#0050ff',
-            data
+            data: Object.values(data)
           });
         });
 
@@ -186,7 +186,7 @@ export class HospAgeComponent implements AfterViewInit, OnInit {
             label: `Variation des entrées en réanimation entre le ${dateFr} et ${dateFr2}`,
             backgroundColor: '#ff0000',
             borderColor: '#ff0000',
-            data
+            data: Object.values(data)
           });
 
           if (this._chartVariation) {
@@ -203,7 +203,7 @@ export class HospAgeComponent implements AfterViewInit, OnInit {
       .subscribe(data => {
         if (this._proportion) {
           const total = this.hospService.reduceAdd(data);
-          data = data.map(d => this.hospService.roundDecimal((d * 100) / total, 2));
+          data = Object.values(data).map(d => this.hospService.roundDecimal((d * 100) / total, 2));
         }
         this._data.datasets.push({
           label: `${label} ${dateFr}`,

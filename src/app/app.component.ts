@@ -26,7 +26,6 @@ export class AppComponent implements OnInit, AfterViewChecked {
   }
 
   public ngOnInit(): void {
-    this.hospService.update().subscribe();
     this.config.setTranslation({
       dayNames: ['Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi'],
       dayNamesShort: ['Dim', 'Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam'],
