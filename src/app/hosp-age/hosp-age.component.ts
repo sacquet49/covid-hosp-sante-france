@@ -147,7 +147,7 @@ export class HospAgeComponent implements AfterViewInit, OnInit {
           label: `${LABEL_DECEDE} ${dateFr} total : ${total}`,
           backgroundColor: '#048d92',
           borderColor: '#048d92',
-          data
+          data: Object.values(data)
         });
         if (this._chartDece) {
           this._chartDece.refresh();
@@ -202,14 +202,14 @@ export class HospAgeComponent implements AfterViewInit, OnInit {
     this.hospService.getHospitaliseTrancheAgeByDate(filtre, dateString)
       .subscribe(data => {
         if (this._proportion) {
-          const total = this.hospService.reduceAdd(data);
+          const total = this.hospService.reduceAdd(Object.values(data));
           data = Object.values(data).map(d => this.hospService.roundDecimal((d * 100) / total, 2));
         }
         this._data.datasets.push({
           label: `${label} ${dateFr}`,
           backgroundColor: couleur,
           borderColor: couleur,
-          data
+          data: Object.values(data)
         });
         if (this._chart) {
           this._chart.refresh();
