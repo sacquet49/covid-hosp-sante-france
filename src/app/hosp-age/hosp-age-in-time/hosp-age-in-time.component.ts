@@ -88,23 +88,22 @@ export class HospAgeInTimeComponent implements OnInit {
   }
 
   public getEvolutionParTrancheAge(): void {
-    this.hospService.labelsDayByDate(this._joursSelected[0], this._joursSelected[1])
-      .subscribe(dataLabels => {
-        this._dataEvolution.labels = dataLabels;
-        if (!this._regionSelected) {
-          this._region.resetFilter();
-        }
-        if (this._chartEvolution) {
-          this._chartEvolution.reinit();
-          this._chartEvolution.refresh();
-        }
-        this._dataEvolution.datasets = [];
+    if (!this._regionSelected) {
+      this._region.resetFilter();
+    }
+    if (this._chartEvolution) {
+      this._chartEvolution.reinit();
+      this._chartEvolution.refresh();
+    }
+    this._dataEvolution.datasets = [];
 
-        this.hospService.getdataAgeByTypeAndDateAndRegion(this._typeStatSelected, this._joursSelected[0],
-          this._joursSelected[1], this._regionSelected)
-          .subscribe(data => {
-            this.printValueOnGraph(data);
-          });
+    this.hospService.getdataAgeByTypeAndDateAndRegion(this._typeStatSelected, this._joursSelected[0],
+      this._joursSelected[1], this._regionSelected)
+      .subscribe(data => {
+        this._dataEvolution.labels = Object.entries(data[0].data)
+          .sort((a, b) => a[0].localeCompare(b[0]))
+          .map(([key, value]) => key);
+        this.printValueOnGraph(data);
       });
   }
 

@@ -46,16 +46,8 @@ export class HospitaliseService {
     return this.http.get<number[]>(`${environment.urlWs}/open/api/decesByDay`);
   }
 
-  public getLabelsDay(): Observable<string[]> {
-    return this.http.get<string[]>(`${environment.urlWs}/open/api/labelsDay`);
-  }
-
   public getdataAgeByTypeAndDateAndRegion(type, dateMin, dateMax, region): Observable<RegionData[]> {
     return this.http.get<RegionData[]>(`${environment.urlWs}/open/api/trancheAge/${type}/${dateMin}/${dateMax}/${region}`);
-  }
-
-  public labelsDayByDate(dateMin, dateMax): Observable<string[]> {
-    return this.http.get<string[]>(`${environment.urlWs}/open/api/labelsDay/ByDate/${dateMin}/${dateMax}`);
   }
 
   public getHospitaliseTrancheAgeByDate(filtre, date): Observable<number[]> {

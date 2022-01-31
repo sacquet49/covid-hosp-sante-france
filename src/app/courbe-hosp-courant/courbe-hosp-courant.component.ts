@@ -114,36 +114,28 @@ export class CourbeHospCourantComponent implements AfterViewInit {
     this.initDateForSelector();
     this.updateChart('#0f29ae', LABEL_HOSPITALISATION, 'hosp', ENUM_SEX.TOUS);
     this.updateChart('#e00101', LABEL_REANIMATION, 'rea', ENUM_SEX.TOUS);
-    this.hospService.getLabelsDay()
-      .subscribe(labels => {
-        this._dataDece.labels = labels;
-        this.updateChartDece();
-
-        this._dataHospEcartType.labels = labels;
-        this.updateChartHospEcartType();
-      });
+    this.updateChartDece();
+    this.updateChartHospEcartType();
   }
 
   private updateChart(couleur: any, label: any, filtre: any, sex: string): void {
-    this.hospService.labelsDayByDate(this._joursSelected[0], this._joursSelected[1])
-      .subscribe(dataLabels => {
-        this._data.labels = dataLabels;
-        this.hospService.getDataByTypeAndSexAndDepartementAndDate(filtre, sex, this._departementSelected,
-          this._joursSelected[0], this._joursSelected[1])
-          .subscribe(data => {
-            this._data.datasets.push({
-              label: `${label}`,
-              fill: false,
-              borderColor: couleur,
-              data: Object.values(data)
-            });
-            this._chart.refresh();
-          });
+    this.hospService.getDataByTypeAndSexAndDepartementAndDate(filtre, sex, this._departementSelected,
+      this._joursSelected[0], this._joursSelected[1])
+      .subscribe(data => {
+        this._data.labels = Object.keys(data);
+        this._data.datasets.push({
+          label: `${label}`,
+          fill: false,
+          borderColor: couleur,
+          data: Object.values(data)
+        });
+        this._chart.refresh();
       });
   }
 
   private updateChartDece(): void {
     this.hospService.getDecesByDay().subscribe(data => {
+      this._dataDece.labels = Object.keys(data);
       this._dataDece.datasets.push({
         label: `Nombre quotidien de personnes nouvellement décédées`,
         fill: false,
@@ -157,7 +149,9 @@ export class CourbeHospCourantComponent implements AfterViewInit {
   private updateChartHospEcartType(): void {
     this.hospService.getdataHospByTypeAndSexeAndDepartement('hosp', ENUM_SEX.TOUS, this._departementSelected)
       .subscribe(data => {
-        let dataStd = Object.values(data).map((v, i) => data[i + 1] && v ? math.std(v, data[i + 1]) : undefined);
+        this._dataHospEcartType.labels = Object.keys(data);
+        const dataArray = Object.values(data);
+        let dataStd = dataArray.map((v, i) => dataArray[i + 1] && v ? math.std(v, dataArray[i + 1]) : undefined);
         dataStd = dataStd.map((v, i) => dataStd[i + 1] && v ? (v + dataStd[i + 1]) / 2 : undefined);
         this._dataHospEcartType.datasets.push({
           label: `Ecart type du nombre de personnes actuellement hospitalisées`,
