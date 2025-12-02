@@ -8,11 +8,11 @@
       <p-calendar [(ngModel)]="jour" [minDate]="minDate" [maxDate]="maxDate"
                   [readonlyInput]="true" inputId="min-max"
                   dateFormat="dd/mm/yy"
-                  placeholder="Choix d'une date" showButtonBar="true"
+                  placeholder="Choix d'une date" [showButtonBar]="true"
                   (onClose)="refreshChart();refreshVariation()"></p-calendar>
     </div>
     <div class="field col-12 md:col-3" *ngIf="jour">
-      <p-calendar [(ngModel)]="jour2" showButtonBar="true"
+      <p-calendar [(ngModel)]="jour2" [showButtonBar]="true"
                   [minDate]="minDate" [maxDate]="maxDate"
                   [readonlyInput]="true" inputId="min-max2"
                   dateFormat="dd/mm/yy"
@@ -43,7 +43,7 @@
   <div class="formgrid grid mb-2">
     <div class="field-checkbox col-12 md:col-3">
       <p-checkbox [(ngModel)]="proportionDece" (onChange)="updateChartDece()"
-                  binary="true" inputId="binary3"></p-checkbox>
+                  [binary]="true" inputId="binary3"></p-checkbox>
       <label for="binary4">Visualisation en pourcentage %</label>
     </div>
   </div>

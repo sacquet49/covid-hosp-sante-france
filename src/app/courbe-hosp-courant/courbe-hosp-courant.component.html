@@ -19,7 +19,7 @@
     </div>
     <div class="field col-12 md:col-3">
       <p-dropdown [options]="departementsDrop" [(ngModel)]="departementSelected"
-                  [styleClass]="'w-100'" filter="true" (onChange)="refresh()"
+                  [styleClass]="'w-100'" [filter]="true" (onChange)="refresh()"
                   [showClear]="true" placeholder="Département" #departement>
         <ng-template let-item pTemplate="selectedItem">
           <span>{{item.label}}</span>
@@ -38,7 +38,7 @@
       <p-calendar [(ngModel)]="jours" [minDate]="minDate" [maxDate]="maxDate"
                   [readonlyInput]="true" inputId="min-max3"
                   dateFormat="dd/mm/yy" selectionMode="range"
-                  placeholder="Choix d'un interval de date" showButtonBar="true"
+                  placeholder="Choix d'un interval de date" [showButtonBar]="true"
                   (onClose)="refresh()"></p-calendar>
     </div>
   </div>
