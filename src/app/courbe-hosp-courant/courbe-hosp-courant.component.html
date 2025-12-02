@@ -1,23 +1,23 @@
-<div class="p-col-10 p-offset-1">
+<div class="col-10 col-offset-1">
   <h1 class="ass-label-gray card">Courbe suivie des patients covid à l'hôpital en France par jour.</h1>
 
-  <div class="p-field-radiobutton p-grid p-formgrid p-mb-2">
-    <div class="p-field-radiobutton p-col-12 p-md-3">
+  <div class="field-radiobutton formgrid grid mb-2">
+    <div class="field-radiobutton col-12 md:col-3">
       <p-radioButton name="sexe" [value]="enumSex.TOUS" [(ngModel)]="sexSelected"
                      inputId="sexe1" (ngModelChange)="refresh()"></p-radioButton>
       <label for="sexe1">Homme et Femme</label>
     </div>
-    <div class="p-field-radiobutton p-col-12 p-md-3">
+    <div class="field-radiobutton col-12 md:col-3">
       <p-radioButton name="sexe" [value]="enumSex.HOMME" [(ngModel)]="sexSelected"
                      inputId="sexe2" (ngModelChange)="refresh()"></p-radioButton>
       <label for="sexe2">Homme</label>
     </div>
-    <div class="p-field-radiobutton p-col-12 p-md-3">
+    <div class="field-radiobutton col-12 md:col-3">
       <p-radioButton name="sexe" [value]="enumSex.FEMME" [(ngModel)]="sexSelected"
                      inputId="sexe3" (ngModelChange)="refresh()"></p-radioButton>
       <label for="sexe3">Femme</label>
     </div>
-    <div class="p-field p-col-12 p-md-3">
+    <div class="field col-12 md:col-3">
       <p-dropdown [options]="departementsDrop" [(ngModel)]="departementSelected"
                   [styleClass]="'w-100'" filter="true" (onChange)="refresh()"
                   [showClear]="true" placeholder="Département" #departement>
@@ -33,8 +33,8 @@
     </div>
   </div>
 
-  <div class="p-fluid p-grid p-formgrid p-mb-2">
-    <div class="p-field p-col-12 p-md-3">
+  <div class="formgrid grid mb-2">
+    <div class="field col-12 md:col-3">
       <p-calendar [(ngModel)]="jours" [minDate]="minDate" [maxDate]="maxDate"
                   [readonlyInput]="true" inputId="min-max3"
                   dateFormat="dd/mm/yy" selectionMode="range"
@@ -43,13 +43,13 @@
     </div>
   </div>
 
-  <div class="p-grid p-mt-4 mb-5">
+  <div class="grid mt-4 mb-5">
     <p-chart #chart type="line" [data]="data" height="570" class="w-100"></p-chart>
   </div>
-  <div class="p-grid p-mt-4 mb-5">
+  <div class="grid mt-4 mb-5">
     <p-chart #chartDece type="line" [data]="dataDece" height="570" class="w-100"></p-chart>
   </div>
-  <div class="p-grid">
+  <div class="grid">
     <p-chart #chartHospEcartType type="line" [data]="dataHospEcartType" height="570" class="w-100"></p-chart>
   </div>
 

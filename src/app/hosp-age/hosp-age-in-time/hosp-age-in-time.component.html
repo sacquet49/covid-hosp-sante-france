@@ -1,25 +1,25 @@
-<div class="p-fluid p-grid p-formgrid p-mb-2">
-  <div class="p-field-radiobutton p-col-12 p-md-2">
+<div class="formgrid grid mb-2">
+  <div class="field-radiobutton col-12 md:col-2">
     <p-radioButton name="typeStat" [value]="type_stat.HOSP" [(ngModel)]="typeStatSelected"
                    inputId="type1" (ngModelChange)="getEvolutionParTrancheAge()"></p-radioButton>
     <label for="type1">Hospitaliser & réanimations</label>
   </div>
-  <div class="p-field-radiobutton p-col-12 p-md-1">
+  <div class="field-radiobutton col-12 md:col-1">
     <p-radioButton name="typeStat" [value]="type_stat.REA" [(ngModel)]="typeStatSelected"
                    inputId="type2" (ngModelChange)="getEvolutionParTrancheAge()"></p-radioButton>
     <label for="type2">Réanimations</label>
   </div>
-  <div class="p-field-radiobutton p-col-12 p-md-3">
+  <div class="field-radiobutton col-12 md:col-3">
     <p-radioButton name="typeStat" [value]="type_stat.DC" [(ngModel)]="typeStatSelected"
                    inputId="type3" (ngModelChange)="getEvolutionParTrancheAge()"></p-radioButton>
     <label for="type3">Décés à l'hôpital (Attention chiffre cumulé, non quotidien)</label>
   </div>
-  <div class="p-field-checkbox p-col-12 p-md-3">
+  <div class="field-checkbox col-12 md:col-3">
     <p-checkbox [(ngModel)]="proportionEvoAge" (onChange)="getEvolutionParTrancheAge()"
                 binary="true" inputId="binary3"></p-checkbox>
     <label for="binary3">Visualisation en pourcentage %</label>
   </div>
-  <div class="p-field p-col-12 p-md-3">
+  <div class="field col-12 md:col-3">
     <p-dropdown [options]="regionsDrop" [(ngModel)]="regionSelected"
                 [styleClass]="'w-100'" filter="true" (onChange)="getEvolutionParTrancheAge()"
                 [showClear]="true" placeholder="Région" #region>
@@ -34,8 +34,8 @@
     </p-dropdown>
   </div>
 </div>
-<div class="p-fluid p-grid p-formgrid p-mb-2">
-  <div class="p-field p-col-12 p-md-3">
+<div class="formgrid grid mb-2">
+  <div class="field col-12 md:col-3">
     <p-calendar [(ngModel)]="jours" [minDate]="minDate" [maxDate]="maxDate"
                 [readonlyInput]="true" inputId="min-max3"
                 dateFormat="dd/mm/yy" selectionMode="range"
@@ -43,6 +43,6 @@
                 (onClose)="refreshVariation()"></p-calendar>
   </div>
 </div>
-<div class="p-grid p-mt-4 mb-5">
+<div class="grid mt-4 mb-5">
   <p-chart #chartEvolution type="line" [data]="dataEvolution" width="1250" height="570" class="w-100"></p-chart>
 </div>
