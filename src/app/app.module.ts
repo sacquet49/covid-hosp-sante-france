@@ -10,37 +10,31 @@ import {HomeModule} from './home/home.module';
 import {TabMenuModule} from 'primeng/tabmenu';
 import {HospAgeModule} from './hosp-age/hosp-age.module';
 import {CourbeHospCourantModule} from './courbe-hosp-courant/courbe-hosp-courant.module';
-import {HttpClientModule} from '@angular/common/http';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import {AppRoutingModule} from './app-routing.module';
 import {MenuModule} from 'primeng/menu';
 
 // the second parameter 'fr' is optional
 registerLocaleData(localeFr, 'fr');
 
-@NgModule({
-  declarations: [
-    AppComponent
-  ],
-  imports: [
-    CommonModule,
-    BrowserModule,
-    BrowserAnimationsModule,
-    HttpClientModule,
-    HomeModule,
-    HospAgeModule,
-    CourbeHospCourantModule,
-    MenuModule,
-    TabMenuModule,
-    AppRoutingModule
-  ],
-  providers: [
-    {provide: LOCALE_ID, useValue: 'fr'},
-    HospitaliseService,
-    AdresseService
-  ],
-  bootstrap: [
-    AppComponent
-  ]
-})
+@NgModule({ declarations: [
+        AppComponent
+    ],
+    bootstrap: [
+        AppComponent
+    ], imports: [CommonModule,
+        BrowserModule,
+        BrowserAnimationsModule,
+        HomeModule,
+        HospAgeModule,
+        CourbeHospCourantModule,
+        MenuModule,
+        TabMenuModule,
+        AppRoutingModule], providers: [
+        { provide: LOCALE_ID, useValue: 'fr' },
+        HospitaliseService,
+        AdresseService,
+        provideHttpClient(withInterceptorsFromDi())
+    ] })
 export class AppModule {
 }

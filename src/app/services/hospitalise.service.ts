@@ -1,7 +1,6 @@
-import {Injectable, Output} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
+import {Injectable} from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 import {Observable} from 'rxjs';
-import {EventEmitter} from 'events';
 import {environment} from '../../environments/environment';
 import {RegionData} from '../hosp-age/hosp-age.model';
 
