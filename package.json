@@ -34,7 +34,7 @@
     "primeng": "^17.18.20-lts",
     "rxjs": "~7.8.2",
     "tslib": "^2.0.0",
-    "zone.js": "~0.15.1",
+    "zone.js": "~0.14.10",
     "mathjs": "^15.1.0"
   },
   "devDependencies": {
