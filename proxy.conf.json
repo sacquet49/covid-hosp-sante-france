@@ -1,14 +1,20 @@
 {
-  "/open/api/*": {
-    "target": "http://[::1]:8080",
+  "/open/api": {
+    "target": "http://localhost:8080",
     "secure": false,
-    "logLevel": "error",
-    "changeOrigin": true
+    "logLevel": "debug",
+    "changeOrigin": true,
+    "pathRewrite": {
+      "^/open/api": "/open/api"
+    }
   },
-  "/private/api/*": {
-    "target": "http://[::1]:8080",
+  "/private/api": {
+    "target": "http://localhost:8080",
     "secure": false,
-    "logLevel": "error",
-    "changeOrigin": true
+    "logLevel": "debug",
+    "changeOrigin": true,
+    "pathRewrite": {
+      "^/private/api": "/private/api"
+    }
   }
 }

@@ -20,7 +20,9 @@
             "outputPath": "dist/covid-hosp-sante-france",
             "index": "src/index.html",
             "main": "src/main.ts",
-            "polyfills": "src/polyfills.ts",
+            "polyfills": [
+              "src/polyfills.ts"
+            ],
             "tsConfig": "tsconfig.app.json",
             "assets": [
               "src/favicon.ico",
@@ -35,10 +37,10 @@
               "src/assets/index.scss",
               "src/styles.scss"
             ],
-            "scripts": ["node_modules/chart.js/dist/chart.js"],
-            "vendorChunk": true,
+            "scripts": [
+              "node_modules/chart.js/dist/chart.js"
+            ],
             "extractLicenses": false,
-            "buildOptimizer": false,
             "sourceMap": true,
             "optimization": false,
             "namedChunks": true
@@ -56,8 +58,6 @@
               "sourceMap": false,
               "namedChunks": false,
               "extractLicenses": true,
-              "vendorChunk": false,
-              "buildOptimizer": true,
               "budgets": [
                 {
                   "type": "initial",

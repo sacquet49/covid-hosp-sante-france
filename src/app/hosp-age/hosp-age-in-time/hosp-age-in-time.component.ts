@@ -4,7 +4,7 @@ import {Dropdown} from 'primeng/dropdown';
 import {AdresseService} from '../../services/adresse.service';
 import {SelectItem} from 'primeng/api';
 import {HospitaliseService} from '../../services/hospitalise.service';
-import * as moment from 'moment';
+import moment from 'moment';
 import {RegionData, TYPE_STAT} from '../hosp-age.model';
 import {DataChart, Region} from '../../services/core.model';
 

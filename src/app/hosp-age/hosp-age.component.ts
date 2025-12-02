@@ -1,6 +1,6 @@
 import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
 import {HospitaliseService} from '../services/hospitalise.service';
-import * as moment from 'moment';
+import moment from 'moment';
 import {UIChart} from 'primeng/chart';
 import {LABEL, LABEL_DECEDE, LABEL_HOSPITALISATION, LABEL_REANIMATION} from './hosp-age.model';
 import {DataChartBar} from '../services/core.model';

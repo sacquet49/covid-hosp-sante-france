@@ -55,6 +55,7 @@ export class HospitaliseService {
   }
 
   public getDataByTypeAndSexAndDepartementAndDate(filtre, sex, departement, dateMin, dateMax): Observable<number[]> {
+    // tslint:disable-next-line:max-line-length
     return this.http.get<number[]>(`${environment.urlWs}/open/api/hospCourant/byDate/${filtre}/${sex}/${departement}/${dateMin}/${dateMax}`);
   }
 

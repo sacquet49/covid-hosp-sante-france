@@ -5,7 +5,7 @@ import {AdresseService} from '../services/adresse.service';
 import {SelectItem} from 'primeng/api';
 import * as math from 'mathjs';
 import {Dropdown} from 'primeng/dropdown';
-import * as moment from 'moment';
+import moment from 'moment';
 import {ENUM_SEX, LABEL_HOSPITALISATION, LABEL_REANIMATION} from './courbe-hosp-courant.model';
 import {DataChart, Departement} from '../services/core.model';
 
