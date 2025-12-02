@@ -1,5 +1,5 @@
 // Bootstrap 5 Required
-@import "../../node_modules/bootstrap/scss/bootstrap-utilities";
+@use "../../node_modules/bootstrap/scss/bootstrap-utilities";
 
 p-autocomplete {
   input {

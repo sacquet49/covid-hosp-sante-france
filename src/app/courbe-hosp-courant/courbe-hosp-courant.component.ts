@@ -10,8 +10,9 @@ import {ENUM_SEX, LABEL_HOSPITALISATION, LABEL_REANIMATION} from './courbe-hosp-
 import {DataChart, Departement} from '../services/core.model';
 
 @Component({
-  selector: 'courbe-hosp-courant',
-  templateUrl: './courbe-hosp-courant.component.html'
+    selector: 'courbe-hosp-courant',
+    templateUrl: './courbe-hosp-courant.component.html',
+    standalone: false
 })
 export class CourbeHospCourantComponent implements AfterViewInit {
 

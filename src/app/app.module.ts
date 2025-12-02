@@ -16,11 +16,12 @@ import {MenuModule} from 'primeng/menu';
 import {provideAnimationsAsync} from '@angular/platform-browser/animations/async';
 import {providePrimeNG} from 'primeng/config';
 import Material from '@primeng/themes/material';
-import {definePreset} from '@primeuix/themes';
+import { definePreset } from '@primeng/themes';
 
 // the second parameter 'fr' is optional
 registerLocaleData(localeFr, 'fr');
 
+// @ts-ignore
 const MyPreset = definePreset(Material, {
   semantic: {
     primary: {

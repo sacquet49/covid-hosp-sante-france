@@ -6,9 +6,10 @@ import {LABEL, LABEL_DECEDE, LABEL_HOSPITALISATION, LABEL_REANIMATION} from './h
 import {DataChartBar} from '../services/core.model';
 
 @Component({
-  selector: 'hosp-age',
-  templateUrl: './hosp-age.component.html',
-  providers: []
+    selector: 'hosp-age',
+    templateUrl: './hosp-age.component.html',
+    providers: [],
+    standalone: false
 })
 export class HospAgeComponent implements AfterViewInit, OnInit {
 

@@ -9,8 +9,9 @@ import {RegionData, TYPE_STAT} from '../hosp-age.model';
 import {DataChart, Region} from '../../services/core.model';
 
 @Component({
-  selector: 'app-hosp-age-in-time',
-  templateUrl: './hosp-age-in-time.component.html'
+    selector: 'app-hosp-age-in-time',
+    templateUrl: './hosp-age-in-time.component.html',
+    standalone: false
 })
 export class HospAgeInTimeComponent implements OnInit {
 
