@@ -31,7 +31,7 @@
     "moment": "^2.30.1",
     "primeflex": "^4.0.0",
     "primeicons": "^6.0.1",
-    "primeng": "^17.18.20-lts",
+    "primeng": "^16.9.17-lts",
     "rxjs": "~7.8.2",
     "tslib": "^2.0.0",
     "zone.js": "~0.13.3",
