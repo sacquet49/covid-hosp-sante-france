@@ -1,7 +1,7 @@
 import {AfterViewChecked, Component, OnInit, ViewChild} from '@angular/core';
-import {MenuItem, PrimeNGConfig} from 'primeng/api';
-import {HospitaliseService} from './services/hospitalise.service';
+import {MenuItem} from 'primeng/api';
 import {TabMenu} from 'primeng/tabmenu';
+import {PrimeNG} from 'primeng/config';
 
 @Component({
   selector: 'app-root',
@@ -21,8 +21,7 @@ export class AppComponent implements OnInit, AfterViewChecked {
     return this._tabMenuItems;
   }
 
-  constructor(private hospService: HospitaliseService,
-              private config: PrimeNGConfig) {
+  constructor(private config: PrimeNG) {
   }
 
   public ngOnInit(): void {
