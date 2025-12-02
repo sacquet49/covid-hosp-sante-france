@@ -1,6 +1,6 @@
 import {Component, Input, OnInit, ViewChild} from '@angular/core';
 import {UIChart} from 'primeng/chart';
-import {Dropdown} from 'primeng/dropdown';
+import {Select} from 'primeng/select';
 import {AdresseService} from '../../services/adresse.service';
 import {SelectItem} from 'primeng/api';
 import {HospitaliseService} from '../../services/hospitalise.service';
@@ -17,7 +17,7 @@ export class HospAgeInTimeComponent implements OnInit {
   @ViewChild('chartEvolution')
   private _chartEvolution: UIChart;
   @ViewChild('region')
-  private _region: Dropdown;
+  private _region: Select;
   private _dataEvolution: DataChart = new DataChart();
   @Input()
   public minDate: Date;

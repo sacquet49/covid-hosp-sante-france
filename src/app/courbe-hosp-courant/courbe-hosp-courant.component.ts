@@ -4,7 +4,7 @@ import {UIChart} from 'primeng/chart';
 import {AdresseService} from '../services/adresse.service';
 import {SelectItem} from 'primeng/api';
 import * as math from 'mathjs';
-import {Dropdown} from 'primeng/dropdown';
+import {Select} from 'primeng/select';
 import moment from 'moment';
 import {ENUM_SEX, LABEL_HOSPITALISATION, LABEL_REANIMATION} from './courbe-hosp-courant.model';
 import {DataChart, Departement} from '../services/core.model';
@@ -30,7 +30,7 @@ export class CourbeHospCourantComponent implements AfterViewInit {
   @ViewChild('chartHospEcartType')
   private _chartHospEcartType: UIChart;
   @ViewChild('departement')
-  private _departement: Dropdown;
+  private _departement: Select;
   private _data: DataChart = new DataChart();
   private _dataDece: DataChart = new DataChart();
   private _dataHospEcartType: DataChart = new DataChart();

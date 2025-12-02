@@ -31,8 +31,6 @@
             "styles": [
               "node_modules/primeicons/primeicons.css",
               "node_modules/primeflex/primeflex.scss",
-              "src/assets/theme/theme-blue.css",
-              "src/assets/layout/css/layout-blue.css",
               "src/assets/index.scss",
               "src/styles.scss"
             ],

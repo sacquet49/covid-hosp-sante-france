@@ -4,8 +4,8 @@ import {BrowserModule} from '@angular/platform-browser';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {FormsModule} from '@angular/forms';
 import {ChartModule} from 'primeng/chart';
-import {CalendarModule} from 'primeng/calendar';
-import {DropdownModule} from 'primeng/dropdown';
+import {DatePickerModule} from 'primeng/datepicker';
+import {SelectModule} from 'primeng/select';
 import {CheckboxModule} from 'primeng/checkbox';
 import {RadioButtonModule} from 'primeng/radiobutton';
 import {HospAgeComponent} from './hosp-age.component';
@@ -22,8 +22,8 @@ import {HospAgeInTimeComponent} from './hosp-age-in-time/hosp-age-in-time.compon
     BrowserAnimationsModule,
     FormsModule,
     ChartModule,
-    CalendarModule,
-    DropdownModule,
+    DatePickerModule,
+    SelectModule,
     CheckboxModule,
     RadioButtonModule
   ]

@@ -14,7 +14,17 @@
       </div>
     </div>
     <div class="layout-main">
-      <p-tabMenu [model]="tabMenuItems" #tabMenu></p-tabMenu>
+      <p-tabs value="0">
+        <p-tablist>
+          @for(tab of tabMenuItems; track tab.routerLink){
+            <p-tab [value]="tab.routerLink" [routerLink]="tab.routerLink"
+                   class="flex items-center !gap-2 text-inherit">
+              <i [class]="tab.icon"></i>
+              <span>{{ tab.label }}</span>
+            </p-tab>
+          }
+        </p-tablist>
+      </p-tabs>
 
       <div class="layout-content">
 

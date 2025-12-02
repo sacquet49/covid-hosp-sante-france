@@ -24,6 +24,7 @@
     "@fullcalendar/daygrid": "^6.1.19",
     "@fullcalendar/interaction": "^6.1.19",
     "@fullcalendar/timegrid": "^6.1.19",
+    "@primeng/themes": "^18.0.7-lts",
     "@primeuix/themes": "^2.0.1",
     "@types/mathjs": "^9.4.2",
     "@types/moment": "^2.13.0",

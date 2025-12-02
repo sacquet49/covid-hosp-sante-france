@@ -20,27 +20,27 @@
     <label for="binary3">Visualisation en pourcentage %</label>
   </div>
   <div class="field col-12 md:col-3">
-    <p-dropdown [options]="regionsDrop" [(ngModel)]="regionSelected"
+    <p-select [options]="regionsDrop" [(ngModel)]="regionSelected"
                 [styleClass]="'w-100'" [filter]="true" (onChange)="getEvolutionParTrancheAge()"
                 [showClear]="true" placeholder="Région" #region>
-      <ng-template let-item pTemplate="selectedItem">
+      <ng-template pTemplate="selectedItem" let-item>
         <span>{{item.label}}</span>
       </ng-template>
-      <ng-template let-dep pTemplate="item">
+      <ng-template pTemplate="item" let-dep>
         <div class="ui-helper-clearfix">
           {{dep.label}}
         </div>
       </ng-template>
-    </p-dropdown>
+    </p-select>
   </div>
 </div>
 <div class="formgrid grid mb-2">
   <div class="field col-12 md:col-3">
-    <p-calendar [(ngModel)]="jours" [minDate]="minDate" [maxDate]="maxDate"
+    <p-datepicker [(ngModel)]="jours" [minDate]="minDate" [maxDate]="maxDate"
                 [readonlyInput]="true" inputId="min-max3"
                 dateFormat="dd/mm/yy" selectionMode="range"
                 placeholder="Choix d'un interval de date" [showButtonBar]="true"
-                (onClose)="refreshVariation()"></p-calendar>
+                (onSelect)="refreshVariation()"></p-datepicker>
   </div>
 </div>
 <div class="grid mt-4 mb-5">

@@ -1,16 +1,13 @@
-import {AfterViewChecked, Component, OnInit, ViewChild} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {MenuItem} from 'primeng/api';
-import {TabMenu} from 'primeng/tabmenu';
 import {PrimeNG} from 'primeng/config';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html'
 })
-export class AppComponent implements OnInit, AfterViewChecked {
+export class AppComponent implements OnInit {
 
-  @ViewChild('tabMenu')
-  private _tabMenuObjet: TabMenu;
   private _tabMenuItems: MenuItem[] = [
     {label: '', icon: 'pi pi-home', routerLink: ['/home']},
     {label: 'Hospitalisation par âges', icon: 'pi pi-chart-bar', routerLink: ['/age']},
@@ -35,9 +32,5 @@ export class AppComponent implements OnInit, AfterViewChecked {
       clear: 'Effacer',
       weekHeader: 'Semaine'
     });
-  }
-
-  public ngAfterViewChecked(): void {
-    this._tabMenuObjet.updateInkBar();
   }
 }
