@@ -20,9 +20,6 @@ export class HospitaliseService {
     {nom: 'donnees-hospitalieres-etablissements-covid19', id: '', data: []}
   ];
 
-  @Output()
-  isInit = new EventEmitter<number>();
-
   constructor(private http: HttpClient) {
   }
 
